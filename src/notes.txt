@@ -1,0 +1,45 @@
+min 6 herbruikbare componenten  met properties
+min 1 ( waarvan 1 callback property)
+navbar telt niet mee
+herbruikbare component telt ook mee al gebruikje het maar 1 keer
+
+default waarde aan property {type = "button"}
+
+begin met plain html en zet daarna om naar componenten
+
+
+
+Mijn stappen plan
+
+nieuw project aan gemaakt met -> npx create-vite
+
+repository aan gemaakt op github -> gh repo create <projectnaam> --public
+gh repo create backend-recipe-app --public
+✓ Created repository Jhudeska/backend-recipe-app on github.com
+  https://github.com/Jhudeska/backend-recipe-app
+
+  jhudeska@Jhudeska frontend-recipe-app % git status
+  fatal: not a git repository (or any of the parent directories): .git
+
+  jhudeska@Jhudeska frontend-recipe-app % git init
+  hint: Using 'master' as the name for the initial branch. This default branch name
+  hint: is subject to change. To configure the initial branch name to use in all
+  hint: of your new repositories, which will suppress this warning, call:
+  hint:
+  hint:   git config --global init.defaultBranch <name>
+  hint:
+  hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+  hint: 'development'. The just-created branch can be renamed via this command:
+  hint:
+  hint:   git branch -m <name>
+  Initialized empty Git repository in /Users/jhudeska/WebstormProjects/Lessen/Einopdracht/frontend-recipe-app/.git/
+
+git add .
+git commit -m "first commit"
+git branch -M main
+git remote add origin git@github.com:Jhudeska/backend-recipe-app.git
+git push -u origin main
+
+
+
+
