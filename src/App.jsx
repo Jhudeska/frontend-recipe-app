@@ -1,7 +1,7 @@
 
 import './App.css'
 import Home from "./pages/home/Home.jsx";
-import {Route, Routes} from "react-router-dom";
+import {Link, Route, Routes} from "react-router-dom";
 import Recipes from "./pages/recipes/Recipes.jsx";
 import NotFound from "./pages/404/NotFound.jsx";
 import Contact from "./pages/contact/Contact.jsx";
@@ -13,6 +13,14 @@ function App() {
 
   return (
     <>
+      <nav>
+        <Link to="/">Home</Link>
+        <Link to="/recipes">Recipes</Link>
+        <Link to="/favorites">Favorite</Link>
+        <Link to="/contact">Contact</Link>
+        <Link to="/profile">Profile</Link>
+      </nav>
+
       <Routes>
         <Route path="/"
                element={<Home />}
