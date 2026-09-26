@@ -1,3 +1,5 @@
+#Ignore one specific file
+notes.txt
 # Logs
 logs
 *.log
