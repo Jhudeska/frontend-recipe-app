@@ -14,6 +14,7 @@ import Header from "./components/header/Header.jsx";
 import Footer from "./components/footer/Footer.jsx";
 import Navbar from "./components/navbar/Navbar.jsx";
 import Search from "./components/search/Search.jsx";
+import SignIn from "./pages/signin/SignIn.jsx";
 
 
 function App() {
@@ -95,6 +96,10 @@ function App() {
                   path="/search"
                   element={<Search />}
               />
+              <Route
+                path="/signin"
+                element={<SignIn />}
+            />
 
               <Route
                   path="/contact"
