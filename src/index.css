@@ -11,6 +11,10 @@ body,
     min-height: 100%;
 }
 
+:root {
+
+}
+
 .outer-container {
     display: flex;
     flex-direction: row;

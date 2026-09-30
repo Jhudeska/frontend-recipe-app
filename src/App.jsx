@@ -12,6 +12,8 @@ import Profile from "./pages/profile/Profile.jsx";
 import NotFound from "./pages/404/NotFound.jsx";
 import Header from "./components/header/Header.jsx";
 import Footer from "./components/footer/Footer.jsx";
+import Navbar from "./components/navbar/Navbar.jsx";
+import Search from "./components/search/Search.jsx";
 
 
 function App() {
@@ -67,7 +69,7 @@ function App() {
 
           <section className="outer-container header-test">
             <div className="inner-container">
-              {/*<Navbar />*/}
+              <Navbar />
             </div>
           </section>
 
@@ -88,6 +90,10 @@ function App() {
               <Route
                   path="/favorites"
                   element={<Favorites />}
+
+              /><Route
+                  path="/search"
+                  element={<Search />}
               />
 
               <Route

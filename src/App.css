@@ -3,15 +3,6 @@
   display: block;
 }
 
-.get-started {
-  min-height: 100dvh;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  padding: 24px;
-  background: white;
-}
-
 .site {
   display: none;
   min-height: 100dvh;

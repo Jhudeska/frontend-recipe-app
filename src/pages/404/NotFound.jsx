@@ -1,11 +1,15 @@
 import './NotFound.css'
+import notFound from '../../assets/notfound.png'
 
 function NotFound() {
     return (
-        <div className="page-container">
-            <h1>404</h1>
-            <p>Deze pagina bestaat niet.</p>
-        </div>
+        <section className=" outer-container not-found">
+            <div className="inner-container">
+                <h1 className="not-found__heading">My Recipe</h1>
+                <img className="not-found__img" src={notFound} alt="Image of baking" />
+                <p>404 - Page Not Found</p>
+            </div>
+        </section>
     )
 }
 
