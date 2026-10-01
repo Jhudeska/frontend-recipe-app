@@ -12,8 +12,8 @@
 .sign-in__1 {
     display: flex;
     width: 50%;
-    border: 2px solid #111111;
-    border-right: none;
+    /*border: 2px solid #111111;*/
+    /*border-right: none;*/
 }
 
 .sign-in__2 {

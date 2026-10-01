@@ -1,4 +1,5 @@
 import './Favorites.css'
+import  soup from '../../assets/kippensoep.png'
 
 
 function Favorites() {
@@ -9,7 +10,7 @@ function Favorites() {
 
                 <table className="data">
                     <thead>
-                    <tr>
+                    <tr className="thead">
                         <th></th>
                         <th>Title</th>
                         <th>Description</th>
@@ -20,7 +21,7 @@ function Favorites() {
                     <tbody>
                     <tr>
                         <td>
-                            <img src="assets/kippensoep.png" alt="Kippensoep" />
+                            <img className="favorites_img" src={soup} alt="Kippensoep" />
                         </td>
                         <td>
                             <strong>Kippensoep</strong>
@@ -33,7 +34,7 @@ function Favorites() {
 
                     <tr>
                         <td>
-                            <img src="assets/kippensoep.png" alt="Kippensoep" />
+                            <img className="favorites_img" src={soup} alt="Kippensoep" />
                         </td>
                         <td>
                             <strong>Kippensoep</strong>
