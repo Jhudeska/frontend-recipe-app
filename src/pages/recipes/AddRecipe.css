@@ -1,0 +1,46 @@
+.field{
+    border:1px solid lightslategray;
+    border-radius:6px;
+    padding:11px 14px;
+    font-size:13px;
+    width:100%;
+    margin-bottom:14px;
+    display:block;
+    color:#333;
+}
+
+textarea.field{
+    resize:vertical;
+    min-height:110px;
+}
+
+.form-narrow{
+    min-width:520px;
+}
+
+
+.image-upload {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.upload-button {
+    /*width: fit-content;*/
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+.image-preview {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.navigate-buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content:flex-end;
+    gap: 15px;
+}

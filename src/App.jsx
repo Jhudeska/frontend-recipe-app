@@ -16,6 +16,8 @@ import Navbar from "./components/navbar/Navbar.jsx";
 import Search from "./components/search/Search.jsx";
 import SignIn from "./components/signin/SignIn.jsx";
 import Admin from "./pages/admin/Admin.jsx";
+import AddRecipe from "./pages/recipes/AddRecipe.jsx";
+import UpdateRecipe from "./pages/recipes/UpdateRecipe.jsx";
 
 
 function App() {
@@ -85,6 +87,16 @@ function App() {
               />
 
               <Route
+                  path="/add_recipes"
+                  element={<AddRecipe />}
+              />
+
+              <Route
+                  path="/update_recipes"
+                  element={<UpdateRecipe />}
+              />
+
+              <Route
                   path="/recipes"
                   element={<Recipes />}
               />
@@ -98,7 +110,7 @@ function App() {
                   element={<Search />}
               />
               <Route
-                path="/signin"
+                path="/sign_in"
                 element={<SignIn />}
             />
 
@@ -112,7 +124,7 @@ function App() {
                   element={<Profile />}
               />
 
-              <Route path="admin"
+              <Route path="/admin"
                      element={<Admin />}
               />
 
