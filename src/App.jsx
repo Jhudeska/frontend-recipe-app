@@ -15,6 +15,7 @@ import Footer from "./components/footer/Footer.jsx";
 import Navbar from "./components/navbar/Navbar.jsx";
 import Search from "./components/search/Search.jsx";
 import SignIn from "./components/signin/SignIn.jsx";
+import Admin from "./pages/admin/Admin.jsx";
 
 
 function App() {
@@ -109,6 +110,10 @@ function App() {
               <Route
                   path="/profile"
                   element={<Profile />}
+              />
+
+              <Route path="admin"
+                     element={<Admin />}
               />
 
               <Route path="*"

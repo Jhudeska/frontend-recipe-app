@@ -1,4 +1,4 @@
-# Inleiding Frontend Backend
+# Inleiding Frontend
 Als eindopdracht  voor Novi Hogeschool ga ik een applicatie bouwen als `Fullstack Developer`.
 In deze handleiding zal ik  benoemen welke  benodigheden er nodig nodig zijn zodat jij als  gebruiker de applicatie kan draaien. 
 De frontend van deze applicatie is gebouwd in React en de backend in Springboot framework. 

@@ -57,7 +57,6 @@ function Contact() {
                         value={formData.description}
                         onChange={handleChange}
                     />
-
                     <textarea
                         className="field"
                         name="message"
@@ -66,7 +65,6 @@ function Contact() {
                         onChange={handleChange}
                         required
                     />
-
                     <div>
                         <button type="submit">Send</button>
                     </div>
