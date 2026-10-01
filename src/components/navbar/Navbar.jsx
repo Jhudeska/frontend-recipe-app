@@ -1,7 +1,9 @@
 import "./Navbar.css"
 import logo from "../../assets/receta-logo.svg"
+import userBadge from "../../assets/user-regular-full.svg" ;
 import {NavLink, useNavigate} from "react-router-dom";
 import {useState} from "react";
+
 
 function Navbar() {
     const [query, setQuery] = useState("");
@@ -78,7 +80,8 @@ function Navbar() {
 
                 </form>
 
-                <NavLink to="/profile">
+                <NavLink to="/profile" className="profile-link">
+                  <img className="user-badge" src={userBadge} alt="Profile" />
                     Profile
                 </NavLink>
 

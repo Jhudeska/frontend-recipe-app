@@ -3,9 +3,11 @@ import './Recipes.css'
 
 function Recipes() {
     return (
-        <div className="page-container">
-            <h1>Recipes</h1>
-        </div>
+        <section className="outer-container page-container">
+            <div className="inner-container">
+                <h1>Recipes</h1>
+            </div>
+        </section>
     )
 }
 

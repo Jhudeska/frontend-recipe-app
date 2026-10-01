@@ -75,3 +75,17 @@
     margin-right:4px;
     flex:0 0 auto;
 }
+
+.user-badge {
+    display: flex;
+    width: 30px;
+    height: 30px;
+    background: #626b3e;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.profile-link {
+    display: flex;
+    align-items: center;
+}

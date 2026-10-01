@@ -1,0 +1,17 @@
+.profile {
+    display: flex;
+}
+
+.circle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100px;
+    height: 100px;
+    background: #626b3e;
+    border-radius: 50%;
+}
+
+.circle_img {
+
+}

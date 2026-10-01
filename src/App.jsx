@@ -4,7 +4,7 @@ import {useState} from "react";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import Splash from "./components/splash/Splash.jsx";
 import GetStarted from "./components/getstarted/GetStarted.jsx";
-import Home from "./pages/home/Home.jsx";
+import Overview from "./components/overview/Overview.jsx";
 import Recipes from "./pages/recipes/Recipes.jsx";
 import Favorites from "./pages/favorites/Favorites.jsx";
 import Contact from "./pages/contact/Contact.jsx";
@@ -14,7 +14,7 @@ import Header from "./components/header/Header.jsx";
 import Footer from "./components/footer/Footer.jsx";
 import Navbar from "./components/navbar/Navbar.jsx";
 import Search from "./components/search/Search.jsx";
-import SignIn from "./pages/signin/SignIn.jsx";
+import SignIn from "./components/signin/SignIn.jsx";
 
 
 function App() {
@@ -80,7 +80,7 @@ function App() {
 
               <Route
                   path="/"
-                  element={<Home />}
+                  element={<Overview />}
               />
 
               <Route
