@@ -4,7 +4,7 @@ import {useState} from "react";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import Splash from "./components/splash/Splash.jsx";
 import GetStarted from "./components/getstarted/GetStarted.jsx";
-import Overview from "./components/overview/Overview.jsx";
+import Overview from "./pages/overview/Overview.jsx";
 import Recipes from "./pages/recipes/Recipes.jsx";
 import Favorites from "./pages/favorites/Favorites.jsx";
 import Contact from "./pages/contact/Contact.jsx";
@@ -18,10 +18,13 @@ import SignIn from "./components/signin/SignIn.jsx";
 import Admin from "./pages/admin/Admin.jsx";
 import AddRecipe from "./pages/recipes/AddRecipe.jsx";
 import UpdateRecipe from "./pages/recipes/UpdateRecipe.jsx";
+import RecipeDetail from "./pages/recipes/RecipeDetail.jsx";
 
 
 function App() {
   const [introStep, setIntroStep] = useState("splash");
+
+
 
   return (
     <>
@@ -67,7 +70,7 @@ function App() {
       >
 
 
-        <BrowserRouter>
+
 
           <Header />
 
@@ -94,6 +97,12 @@ function App() {
               <Route
                   path="/update_recipes"
                   element={<UpdateRecipe />}
+              />
+
+              <Route
+                  // path="/recipes/:id"
+                  path="/recipe_detail"
+                  element={<RecipeDetail />}
               />
 
               <Route
@@ -137,7 +146,7 @@ function App() {
 
           <Footer />
 
-        </BrowserRouter>
+
       </main>
     </>
   )
