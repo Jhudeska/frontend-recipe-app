@@ -1,7 +1,7 @@
 
 import './App.css'
 import {useState} from "react";
-import {BrowserRouter, Route, Routes} from "react-router-dom";
+import { Route, Routes} from "react-router-dom";
 import Splash from "./components/splash/Splash.jsx";
 import GetStarted from "./components/getstarted/GetStarted.jsx";
 import Overview from "./pages/overview/Overview.jsx";
@@ -19,6 +19,8 @@ import Admin from "./pages/admin/Admin.jsx";
 import AddRecipe from "./pages/recipes/AddRecipe.jsx";
 import UpdateRecipe from "./pages/recipes/UpdateRecipe.jsx";
 import RecipeDetail from "./pages/recipes/RecipeDetail.jsx";
+import Test from "./pages/test/Test.jsx";
+import Test1 from "./pages/test/Test1.jsx";
 
 
 function App() {
@@ -127,6 +129,16 @@ function App() {
                   path="/contact"
                   element={<Contact />}
               />
+
+                <Route
+                    path="/test"
+                    element={<Test />}
+                />
+
+                <Route
+                    path="/test1"
+                    element={<Test1 />}
+                />
 
               <Route
                   path="/profile"
