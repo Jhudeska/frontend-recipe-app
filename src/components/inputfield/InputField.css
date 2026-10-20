@@ -1,0 +1,10 @@
+.field {
+    border:1px solid lightslategray;
+    border-radius:6px;
+    padding:11px 14px;
+    font-size:13px;
+    width:100%;
+    margin-bottom:14px;
+    display:block;
+    color:#333;
+}
