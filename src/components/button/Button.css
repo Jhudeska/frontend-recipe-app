@@ -1,0 +1,17 @@
+.transparent {
+    background-color: transparent;
+    border: 2px solid #606C38;
+    color: #606C38;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.green {
+    background-color: #606C38;
+    border: 2px solid #606C38;
+    color: #ffffff;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+}
