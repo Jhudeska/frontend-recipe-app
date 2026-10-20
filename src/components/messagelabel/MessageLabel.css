@@ -1,0 +1,30 @@
+.message-label {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 14px 18px;
+    border-radius: 8px;
+    font-family: Georgia, "Palatino Linotype", Palatino, "Times New Roman", serif;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.4;
+    margin: 0;
+}
+
+/* Error message */
+.message-label--error {
+    background-color: #F0E4D0;
+    color: #B5202F;
+}
+
+/* Success message */
+.message-label--success {
+    background-color: #E3EBD6;
+    color: #2F6B2F;
+}
+
+/* Informational message */
+.message-label--info {
+    background-color: #E2E8EE;
+    color: #27506F;
+}
