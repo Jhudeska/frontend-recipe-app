@@ -1,5 +1,6 @@
 #Ignore one specific file
 notes.txt
+src/pages/test
 # Logs
 logs
 *.log
@@ -24,3 +25,4 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+/src/pages/test/
