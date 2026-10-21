@@ -7,6 +7,7 @@ import {
     createFavorite
 } from "../../api/favoriteService.js";
 import MessageLabel from "../../components/messagelabel/MessageLabel.jsx";
+import CookingSpinner from "../../components/spinner/CookingSpinner.jsx";
 
 
 function Favorites() {
@@ -52,7 +53,7 @@ function Favorites() {
             <div className="inner-container">
                 <h1 className="page-title">Favorites</h1>
 
-                {loading && <p>Favorieten laden...</p>}
+                {loading && <p><CookingSpinner  text="Favorieten laden..."/></p>}
                 {error && <p role="alert">{error}</p>}
 
                 {!loading && !error && favorites.length === 0 && (
