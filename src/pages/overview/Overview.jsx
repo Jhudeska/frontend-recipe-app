@@ -4,7 +4,6 @@ import RecipeCard from "../../components/recipecard/RecipeCard.jsx";
 import { useEffect, useState } from "react";
 import CookingSpinner from "../../components/spinner/CookingSpinner.jsx";
 import {recipeImages} from "../../helpers/recipeImages.js";
-import Button from "../../components/button/Button.jsx"
 import {
     getAllFavorites,
     createFavorite,
@@ -105,11 +104,11 @@ function Overview() {
             <div className="inner-container">
                 {loading && <p><CookingSpinner  text="Recepten bereiden..."/></p>}
 
-                {/*{error && <p role="alert">{error}</p>}*/}
+                {error && <MessageLabel variant="error"><p role="alert">{error}</p></MessageLabel>}
 
-                {/*{!loading && !error && recipes.length === 0 && (*/}
-                {/*    <p>Er zijn nog geen recepten beschikbaar.</p>*/}
-                {/*)}*/}
+                {!loading && !error && recipes.length === 0 && (
+                    <MessageLabel variant="error"><p>Er zijn nog geen recepten beschikbaar.</p></MessageLabel>
+                )}
 
                 {favoriteError && (
                     <MessageLabel variant="error"><p role="alert">{favoriteError}</p></MessageLabel>
