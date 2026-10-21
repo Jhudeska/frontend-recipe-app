@@ -1,0 +1,23 @@
+.get-started {
+    content: "";
+    min-height: 100dvh;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 24px;
+    background-image: url("../../assets/onbording.png");
+    background-position: center;
+}
+
+.get-started button {
+    width: 100%;
+    max-width: 400px;
+    padding: 18px 24px;
+    border: none;
+    border-radius: 8px;
+    background: #81720b;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+}

@@ -1,0 +1,10 @@
+.not-found p {
+    color: lightslategray;
+    font-weight: bolder;
+    text-align: center;
+    font-size: 56px;
+}
+
+h1 .not-found__heading {
+    text-align: left;
+}

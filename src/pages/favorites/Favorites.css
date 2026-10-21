@@ -1,0 +1,19 @@
+
+.data {
+    border: 1px solid lightslategray;
+    border-radius: 5px;
+    padding: 24px;
+    min-width: 800px;
+}
+
+.thead{
+    border-top: 10px solid black;
+}
+
+tr {
+    padding: 10px;
+}
+
+.favorites_img{
+    width: 120px;
+}
