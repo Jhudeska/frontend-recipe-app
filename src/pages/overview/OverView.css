@@ -1,0 +1,44 @@
+.page {
+    width: 100%;
+}
+
+.home-intro {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 60px;
+    margin-top: 90px;
+    border: 3px solid #B0B0B0;
+    border-radius: 15px;
+    padding: 50px 140px;
+}
+
+.home-intro__text {
+    margin: 0;
+    color: #B0B0B0;
+    font-family: var(--inter);
+    text-align: center;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: #000;
+    font-size: 48px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: -1.223px;
+
+}
+
+.home-intro__button {
+    text-decoration: none;
+    margin-top: 3px;
+    margin-right: -611px;
+}
+
+.section-title {
+    text-align: left;
+    font-size: 18px;
+    font-weight: 600;
+    margin: 30px 0 15px;
+}
+
