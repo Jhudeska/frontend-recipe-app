@@ -17,3 +17,28 @@
    width: 300px;
     min-height: 500px;
 }
+
+
+
+
+
+
+
+.splash {
+    min-height: 100dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #626b3e;
+    color: white;
+}
+
+.splash__content {
+    text-align: center;
+}
+
+.splash__img {
+    width: 300px;
+    max-width: 80vw;
+    height: auto;
+}
