@@ -35,19 +35,31 @@ function Navbar() {
 
 
 
-                <NavLink to="/">
+                <NavLink
+                    to="/"
+                    className="green-outline"
+                >
                     Home
                 </NavLink>
 
-                <NavLink to="/recipes">
+                <NavLink
+                    to="/recipes"
+                    className="green-outline"
+                >
                     Recipes
                 </NavLink>
 
-                <NavLink to="/favorites">
+                <NavLink
+                    to="/favorites"
+                    className="green-outline"
+                >
                     Favorites
                 </NavLink>
 
-                <NavLink to="/contact">
+                <NavLink
+                    to="/contact"
+                    className="green-outline"
+                >
                     Contact
                 </NavLink>
 
@@ -80,7 +92,10 @@ function Navbar() {
 
                 </form>
 
-                <NavLink to="/profile" className="profile-link">
+                <NavLink
+                    to="/profile"
+                    className="profile-link"
+                >
                   <img className="user-badge" src={userBadge} alt="Profile" />
                     Profile
                 </NavLink>
