@@ -4,7 +4,6 @@ import {useState} from "react";
 import { Route, Routes} from "react-router-dom";
 import Splash from "./components/splash/Splash.jsx";
 import GetStarted from "./components/getstarted/GetStarted.jsx";
-import Overview from "./pages/overview/Overview.jsx";
 import Recipes from "./pages/recipes/Recipes.jsx";
 import Favorites from "./pages/favorites/Favorites.jsx";
 import Contact from "./pages/contact/Contact.jsx";
@@ -21,6 +20,7 @@ import UpdateRecipe from "./pages/recipes/UpdateRecipe.jsx";
 import RecipeDetail from "./pages/recipes/RecipeDetail.jsx";
 import Test from "./pages/test/Test.jsx";
 import Test1 from "./pages/test/Test1.jsx";
+import Overview from "./pages/overview/Overview.jsx";
 
 
 function App() {

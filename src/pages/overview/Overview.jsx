@@ -103,7 +103,7 @@ function Overview() {
     return (
         <section className="outer-container page-container">
             <div className="inner-container">
-                {loading && <p><CookingSpinner /></p>}
+                {loading && <p><CookingSpinner  text="Recepten bereiden..."/></p>}
 
                 {/*{error && <p role="alert">{error}</p>}*/}
 
