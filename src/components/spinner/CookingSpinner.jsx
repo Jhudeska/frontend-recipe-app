@@ -1,6 +1,6 @@
 import "./CookingSpinner.css";
 
-function CookingSpinner() {
+function CookingSpinner({text}) {
     return (
         <div className="cooking-loader" role="status"
              aria-label="Recepten laden">
@@ -53,7 +53,7 @@ function CookingSpinner() {
             </svg>
 
             <p className="loading-text">
-                Recepten bereiden...
+                {text}
             </p>
         </div>
     );
