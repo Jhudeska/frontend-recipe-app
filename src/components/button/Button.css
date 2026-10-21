@@ -25,6 +25,10 @@
     transition: background-color 0.2s ease, color 0.2s ease;
 }
 
+.btn {
+    padding-left: 16px;
+}
+
 .green-outline:hover {
     background-color: #606C38;
     color: #ffffff;
