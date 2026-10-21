@@ -119,7 +119,7 @@ function Overview() {
                         Got A Recipe That Rocks?
                     </h2>
 
-                    <Link to="/"
+                    <Link to="/add_recipes"
                           className="green-filled home-intro__button"
                     >
                         + Add Recipe
