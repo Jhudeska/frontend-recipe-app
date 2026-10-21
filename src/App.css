@@ -12,3 +12,30 @@
 .site__visible {
   display: flex;
 }
+
+
+
+
+
+
+
+.site {
+  display: flex;
+  min-height: 100dvh;
+  flex-direction: column;
+}
+
+/* Alleen op mobiel */
+@media screen and (max-width: 767px) {
+  .mobile-intro {
+    display: block;
+  }
+
+  .site {
+    display: none;
+  }
+
+  .site__visible {
+    display: flex;
+  }
+}

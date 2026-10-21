@@ -24,9 +24,11 @@ import Overview from "./pages/overview/Overview.jsx";
 
 
 function App() {
-  const [introStep, setIntroStep] = useState("splash");
-
-
+    const [introStep, setIntroStep] = useState(() => {
+        return window.matchMedia("(max-width: 767px)").matches
+            ? "splash"
+            : "website";
+    });
 
   return (
     <>
