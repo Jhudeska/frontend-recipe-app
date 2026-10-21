@@ -44,3 +44,20 @@ textarea.field{
     justify-content:flex-end;
     gap: 15px;
 }
+
+.green-filled {
+    font-weight: bold;
+    background-color: #606C38;
+    border: 2px solid #606C38;
+    color: #ffffff;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.green-filled:hover {
+    background-color: transparent;
+    border: 2px solid #606C38;
+    color: #606C38;
+}

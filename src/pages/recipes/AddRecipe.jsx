@@ -1,5 +1,6 @@
 import {useRef, useState} from "react";
 import "./AddRecipe.css";
+import Button from "../../components/button/Button.jsx";
 
 function AddRecipe() {
     const fileInputRef = useRef(null);
@@ -124,8 +125,8 @@ function AddRecipe() {
                         required
                     />
                     <div className="navigate-buttons">
-                        <button type="submit">Cancel</button>
-                        <button type="submit">Save</button>
+                        <Button text="Cancel" buttonType="submit" btnColor="green-filled"></Button>
+                        <Button text="Save"   buttonType="submit" btnColor="green-filled"></Button>
                     </div>
                 </form>
             </div>

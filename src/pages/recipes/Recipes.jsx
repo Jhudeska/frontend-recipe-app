@@ -1,5 +1,7 @@
 import './Recipes.css'
 import soup from "../../assets/kippensoep.png";
+import Button from "../../components/button/Button.jsx";
+import {Link} from "react-router-dom";
 
 
 function Recipes() {
@@ -30,13 +32,13 @@ function Recipes() {
                         </td>
                         <td>Lorem50</td>
                         <td>
-                            <button className="mini-btn x">x</button>
+                            <Link to="/add_recipes" className="mini-btn x">add</Link>
                         </td>
                         <td>
-                            <button className="mini-btn x">x</button>
+                            <Link to="/update_recipes" className="mini-btn x">edit</Link>
                         </td>
                         <td>
-                            <button className="mini-btn x">x</button>
+                            <Link to="/add_recipes" className="mini-btn x">delete</Link>
                         </td>
                     </tr>
 
@@ -49,13 +51,13 @@ function Recipes() {
                         </td>
                         <td>Lorem50</td>
                         <td>
-                            <button className="mini-btn x">x</button>
+                            <button  to="/add_recipes" className="mini-btn x">add</button>
                         </td>
                         <td>
-                            <button className="mini-btn x">x</button>
+                            <button className="mini-btn x">edit</button>
                         </td>
                         <td>
-                            <button className="mini-btn x">x</button>
+                            <button className="mini-btn x">delete</button>
                         </td>
                     </tr>
                     </tbody>
