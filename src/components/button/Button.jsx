@@ -2,10 +2,12 @@ import "./Button.css"
 
 function Button({text, buttonType = "button", handleClick, btnColor}) {
 
-    if(btnColor === "transparent"){
-        btnColor = "transparent";
-    }else if(btnColor === "green"){
-        btnColor = "green";
+    if(btnColor === "green-filled"){
+        btnColor = "green-filled";
+    }else if(btnColor === "green-outline"){
+        btnColor = "green-outline";
+    }else {
+        btnColor = "gray-outline";
     }
 
     return (

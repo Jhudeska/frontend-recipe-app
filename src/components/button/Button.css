@@ -1,17 +1,47 @@
-.transparent {
-    background-color: transparent;
-    border: 2px solid #606C38;
-    color: #606C38;
-    padding: 10px 20px;
-    border-radius: 6px;
-    cursor: pointer;
-}
-
-.green {
+.green-filled {
+    font-weight: bold;
     background-color: #606C38;
     border: 2px solid #606C38;
     color: #ffffff;
     padding: 10px 20px;
     border-radius: 6px;
     cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.green-filled:hover {
+    background-color: transparent;
+    border: 2px solid #606C38;
+    color: #606C38;
+}
+
+.green-outline {
+    background-color: transparent;
+    border: 2px solid #606C38;
+    color: #606C38;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.green-outline:hover {
+    background-color: #606C38;
+    color: #ffffff;
+    font-weight: bold;
+}
+
+.gray-outline {
+    background-color: transparent;
+    border: 2px solid slategray;
+    color: slategray;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.gray-outline:hover {
+    background-color: transparent;
+    color: slategray;
 }
