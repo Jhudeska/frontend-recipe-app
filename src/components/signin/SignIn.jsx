@@ -30,18 +30,18 @@ function SignIn() {
                                 />
 
                                 <div className="sign-in__links">
-                                    <a href="/forgot-password">
+                                    <a className="signIn__link" href="/forgot-password">
                                         Forgot your password?
                                     </a>
 
-                                    <a href="/forgot-username">
+                                    <a className="signIn__link" href="/forgot-username">
                                         Forgot your username?
                                     </a>
                                 </div>
 
                                 <button
                                     type="submit"
-                                    className="btn btn-primary"
+                                    className="green-filled btn"
                                 >
                                     Sign In
                                 </button>
@@ -51,7 +51,7 @@ function SignIn() {
                                 Don't have an account?
                             </p>
 
-                            <a href="/signup" className="btn btn-outline">
+                            <a href="/signup" className="green-outline btn__link">
                                 Sign Up
                             </a>
                         </div>

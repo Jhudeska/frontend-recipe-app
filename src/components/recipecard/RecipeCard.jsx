@@ -1,11 +1,14 @@
 import './RecipeCard.css'
 import {useEffect, useState} from "react";
+import {Link} from "react-router-dom";
+
 
 function RecipeCard({
                         recipeId,
                         imageUrl,
                         fallbackImage,
                         title ,
+                        description,
                         servings,
                         preparationTime,
                         ratingSore,
@@ -41,32 +44,38 @@ function RecipeCard({
 
     return (
 
-        <div className="rcard">
+        <article className="rcard rcard__header">
             {image ? (
             <img src={image} alt={title}  onError={handleImageError} />
             ) : (
-                <div className="rcard__image-placeholder">
-                    <p>Geen image beschikbaar</p>
-                    {/*{imageUrl && <img src={imageUrl} alt={name} />}*/}
-                </div>
+                <p className="rcard__image-placeholder">
+                    { <img src="https://placehold.co/300x180" alt={`Geen image beschikbaar - ${title}`} />}
+                </p>
             )}
 
-            <div className="body">
-                <div className="title">{title}</div>
+            <div className="rcard__body">
+                <h2 className="title">{title}</h2>
 
-                <div className="sub">
+                <p className="sub">
                     {servings != null && `${servings} p.p.`} &middot; {servings != null && preparationTime != null && ' · '}
                     {preparationTime != null &&
                         `${preparationTime} min`}
-                </div>
+                </p>
 
-                <div className="foot">
+                <p className="description">
+                    {description}
+                    <Link to={`/recipes/${recipeId}`} className="rcard__link">
+                        <p>read more</p>
+                    </Link>
+
+                </p>
+
+                <div className="rcard__footer">
                     <span className="stars" aria-label={`Rating: ${score} van 5`}>
                         {Array.from({ length: 5 }, (_, index) =>
                             index < score ? '\u2605' : '\u2606'
                         )}
                     </span>
-
 
                     <button
                         type="button"
@@ -87,7 +96,7 @@ function RecipeCard({
                     </button>
                 </div>
             </div>
-        </div>
+        </article>
     );
 }
 

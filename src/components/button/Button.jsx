@@ -1,24 +1,24 @@
 import "./Button.css"
 
-function Button({text, buttonType = "button", handleClick, btnColor}) {
+function Button({text: label, buttonType: type = "button", handleClick: onClick, btnColor: btnVariant}) {
 
-    if(btnColor === "green-filled"){
-        btnColor = "green-filled";
-    }else if(btnColor === "green-outline"){
-        btnColor = "green-outline";
+    if(btnVariant === "green-filled"){
+        btnVariant = "green-filled";
+    }else if(btnVariant === "green-outline"){
+        btnVariant = "green-outline";
     }else {
-        btnColor = "gray-outline";
+        btnVariant = "gray-outline";
     }
 
     return (
         <button
-            className={`${btnColor}`}
-            onClick={handleClick}
-            type={buttonType}
+            className={`${btnVariant}`}
+            onClick={onClick}
+            type={type}
         >
-            {text}
+            {label}
         </button>
-    )
+    );
 }
 
 export default Button;

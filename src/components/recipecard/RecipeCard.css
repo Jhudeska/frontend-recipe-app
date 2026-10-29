@@ -19,7 +19,7 @@
     display: block;
 }
 
-.rcard .body {
+.rcard .rcard__body {
     padding: 15px;
 }
 
@@ -34,11 +34,22 @@
     color: #555;
 }
 
-.rcard .foot {
+.rcard .rcard__footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-top: 15px;
+}
+
+.rcard__image-placeholder {
+
+}
+
+.rcard__link{
+    text-decoration: none;
+    color: #BC6C25;
+    font-weight: bold;
+    font-size: 14px;
 }
 
 .stars {

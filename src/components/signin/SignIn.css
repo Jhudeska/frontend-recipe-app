@@ -12,8 +12,6 @@
 .sign-in__1 {
     display: flex;
     width: 50%;
-    /*border: 2px solid #111111;*/
-    /*border-right: none;*/
 }
 
 .sign-in__2 {
@@ -32,4 +30,23 @@
     height: 100%;
     object-fit: cover;
     display: block;
+}
+
+.signIn__link {
+    text-decoration: none;
+    color: black;
+    padding: 10px 20px;
+}
+
+.sign-in__links{
+    margin-bottom: 50px;
+}
+
+.btn {
+    width: 100%;
+}
+.btn__link {
+    width: 100%;
+    display: block;
+    text-align: center;
 }

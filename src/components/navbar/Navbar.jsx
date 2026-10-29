@@ -3,6 +3,7 @@ import logo from "../../assets/receta-logo.svg"
 import userBadge from "../../assets/user-regular-full.svg" ;
 import {NavLink, useNavigate} from "react-router-dom";
 import {useState} from "react";
+import keycloak from "../../helpers/keycloak.js";
 
 
 function Navbar() {
@@ -12,28 +13,38 @@ function Navbar() {
     const handleSearch = (event) => {
         event.preventDefault();
 
-        if (!query.trim()) return;
+        const searchQuery = query.trim();
 
-        navigate(`/search?q=${encodeURIComponent(query)}`);
+        if (!searchQuery) return;
+
+        navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
     };
+
+    async function handleLogout() {
+        try {
+            await keycloak.logout({
+                redirectUri: window.location.origin,
+            });
+        } catch (error) {
+            console.error("Logout failed:", error);
+        }
+    }
+
     return (
         <nav className="navbar">
 
-            <div className="navbar__logo">
+            <section className="navbar__logo">
                 <NavLink to="/" className="navbar__logo">
                     <img
-                        width="50px"
                         src={logo}
                         alt="My Website"
                     />
                     <span className="navbar__logo-text">Receta</span>
                 </NavLink>
-            </div>
+            </section>
 
 
-            <div className="navbar__left">
-
-
+            <section className="navbar__left">
 
                 <NavLink
                     to="/"
@@ -63,10 +74,10 @@ function Navbar() {
                     Contact
                 </NavLink>
 
-            </div>
+            </section>
 
 
-            <div className="navbar__right">
+            <section className="navbar__right">
 
                 <form
                     className="search"
@@ -100,9 +111,30 @@ function Navbar() {
                     Profile
                 </NavLink>
 
-            </div>
+                <NavLink
+                    to="/logout"
+                    className="logout"
+                >
+                    <button className="green-outline" onClick={handleLogout}>
+                        Logout
+                    </button>
+                </NavLink>
+
+                {/*<main>*/}
+                {/*    <h1>*/}
+                {/*        Welcome,{" "}*/}
+                {/*        {keycloak.tokenParsed?.preferred_username}*/}
+                {/*    </h1>*/}
+
+                {/*    <button onClick={handleLogout}>*/}
+                {/*        Logout*/}
+                {/*    </button>*/}
+                {/*</main>*/}
+
+            </section>
 
         </nav>
+
     );
 }
 
