@@ -87,7 +87,7 @@ function Contact() {
                     />
 
                     <div>
-                        <button type="submit">Send</button>
+                        <button type="submit" className="green-filled">Send</button>
                     </div>
                 </form>
             </div>
