@@ -11,6 +11,7 @@ import {
 } from "../../api/favoriteService.js";
 import {getAllRecipes} from "../../api/recipeService.js";
 import MessageLabel from "../../components/messagelabel/MessageLabel.jsx";
+import keycloak from "../../helpers/keycloak.js";
 
 
 function Overview() {
@@ -20,6 +21,7 @@ function Overview() {
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+    console.log(keycloak.token);
 
     useEffect(() => {
         async function fetchRecipes() {
@@ -114,6 +116,11 @@ function Overview() {
                     <MessageLabel variant="error"><p role="alert">{favoriteError}</p></MessageLabel>
                 )}
 
+                <h3>
+                    Welcome, {" "}
+                    {keycloak.tokenParsed?.preferred_username}
+                </h3>
+
                 <div className="home-intro">
                     <h2 className="home-intro__text">
                         Got A Recipe That Rocks?
@@ -137,7 +144,7 @@ function Overview() {
                             key={recipe.recipeId}
                             recipeId={recipe.recipeId}
                             title={recipe.title}
-                            name={recipe.description}
+                            description={recipe.description}
                             servings={recipe.servings}
                             preparationTime={recipe.preparationTime}
                             imageUrl={recipe.imageUrl}
@@ -163,7 +170,7 @@ function Overview() {
                             key={recipe.recipeId}
                             recipeId={recipe.recipeId}
                             title={recipe.title}
-                            name={recipe.description}
+                            description={recipe.description}
                             servings={recipe.servings}
                             preparationTime={recipe.preparationTime}
                             imageUrl={recipe.imageUrl}
@@ -177,9 +184,6 @@ function Overview() {
                         />
                     ))}
                 </div>
-
-
-
             </div>
         </section>
     );

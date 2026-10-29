@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./Contact.css";
+import TextArea from "../../components/textarea/TextArea.jsx";
 
 function Contact() {
     const [formData, setFormData] = useState({
@@ -75,7 +76,7 @@ function Contact() {
                         value={formData.description}
                         onChange={handleChange}
                     />
-                    <textarea
+                    <TextArea
                         className="field"
                         id="message"
                         name="message"
@@ -84,6 +85,7 @@ function Contact() {
                         onChange={handleChange}
                         required
                     />
+
                     <div>
                         <button type="submit">Send</button>
                     </div>

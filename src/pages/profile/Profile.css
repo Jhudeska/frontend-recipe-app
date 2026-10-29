@@ -6,8 +6,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100px;
-    height: 100px;
+    width: 300px;
+    height: 300px;
     background: #626b3e;
     border-radius: 50%;
 }
@@ -24,5 +24,7 @@
 
 
 .profile-container {
-    max-width: 550px;
+    min-width: 450px;
+    padding-top: 60px;
+    padding-bottom: 30px;
 }

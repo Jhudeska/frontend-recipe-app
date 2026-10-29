@@ -22,7 +22,7 @@ function Favorites() {
             setFavorites(response);
         } catch (err) {
             console.error("Favorieten ophalen mislukt:", err);
-            setError("Favorieten konden niet worden geladen.");
+            setError(<MessageLabel variant="error">Favorieten konden niet worden geladen.</MessageLabel> );
         } finally {
             setLoading(false);
         }
