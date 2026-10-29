@@ -30,3 +30,63 @@ tr {
     margin-top: 5px;
 }
 
+@media (max-width: 768px) {
+    .data {
+        width: 100%;
+        min-width: 0;
+        padding: 4px;
+        table-layout: fixed;
+        border-spacing: 0;
+        font-size: 11px;
+    }
+
+    .data th,
+    .data td {
+        padding: 5px 2px;
+        overflow-wrap: anywhere;
+        text-align: center;
+    }
+
+    .data th:first-child,
+    .data td:first-child {
+        width: 19%;
+    }
+
+    .data th:nth-child(2),
+    .data td:nth-child(2) {
+        width: 23%;
+    }
+
+    .data th:nth-child(3),
+    .data td:nth-child(3) {
+        width: 28%;
+    }
+
+    .data th:nth-child(4),
+    .data td:nth-child(4),
+    .data th:nth-child(5),
+    .data td:nth-child(5) {
+        width: 15%;
+    }
+
+    .recipes_img {
+        width: 100%;
+        max-width: 60px;
+        height: 42px;
+        margin: 3px auto;
+        object-fit: cover;
+    }
+
+    .data td button {
+        max-width: 100%;
+        padding: 4px 2px;
+        font-size: 10px;
+        white-space: normal;
+    }
+
+    .data td a {
+        overflow-wrap: anywhere;
+        font-size: 10px;
+    }
+}
+
