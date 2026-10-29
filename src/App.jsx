@@ -18,17 +18,64 @@ import Admin from "./pages/admin/Admin.jsx";
 import AddRecipe from "./pages/recipes/AddRecipe.jsx";
 import UpdateRecipe from "./pages/recipes/UpdateRecipe.jsx";
 import RecipeDetail from "./pages/recipes/RecipeDetail.jsx";
-import Test from "./pages/test/Test.jsx";
-import Test1 from "./pages/test/Test1.jsx";
-import Overview from "./pages/overview/Overview.jsx";
+import Overview1 from "./pages/overview/Overview.jsx";
+import keycloak from "./helpers/keycloak.js";
+import Logout from "./pages/logout/Logout.jsx";
+
 
 
 function App() {
+
     const [introStep, setIntroStep] = useState(() => {
         return window.matchMedia("(max-width: 767px)").matches
             ? "splash"
             : "website";
     });
+        const handleLogin = async () => {
+            try {
+                await keycloak.login({
+                    redirectUri: window.location.origin,
+                });
+            } catch (error) {
+                console.error("Login failed:", error);
+            }
+        };
+
+        const handleRegister = async () => {
+            try {
+                await keycloak.register({
+                    redirectUri: window.location.origin,
+                });
+            } catch (error) {
+                console.error("Registration failed:", error);
+            }
+        };
+
+        // const handleLogout = async () => {
+        //     try {
+        //         await keycloak.logout({
+        //             redirectUri: window.location.origin,
+        //         });
+        //     } catch (error) {
+        //         console.error("Logout failed:", error);
+        //     }
+        // };
+
+        if (!keycloak.authenticated) {
+            return (
+                <main>
+                    <h1>Welcome</h1>
+
+                    <button onClick={handleLogin}>
+                        Login
+                    </button>
+
+                    <button onClick={handleRegister}>
+                        Register
+                    </button>
+                </main>
+            );
+        }
 
   return (
     <>
@@ -90,7 +137,7 @@ function App() {
 
               <Route
                   path="/"
-                  element={<Overview />}
+                  element={<Overview1 />}
               />
 
               <Route
@@ -104,9 +151,13 @@ function App() {
               />
 
               <Route
-                  // path="/recipes/:id"
-                  path="/recipe_detail"
+                  // dynamische routing with use params || const {id} = use params();
+                  path="/recipes/:id"
+                  // path="/recipe_detail"
                   element={<RecipeDetail />}
+                  // private routing
+                  // const auth =  true;
+                  //   <Route path="/recipes" element={auth ? <Recipes /> : Navigate to="/login" />} >
               />
 
               <Route
@@ -133,13 +184,8 @@ function App() {
               />
 
                 <Route
-                    path="/test"
-                    element={<Test />}
-                />
-
-                <Route
-                    path="/test1"
-                    element={<Test1 />}
+                    path="/recipes/:id/edit"
+                    element={<UpdateRecipe />}
                 />
 
               <Route
@@ -150,6 +196,10 @@ function App() {
               <Route path="/admin"
                      element={<Admin />}
               />
+                <Route path="/logout"
+                       element={<Logout />}
+                />
+
 
               <Route path="*"
                      element={<NotFound />}
