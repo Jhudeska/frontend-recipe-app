@@ -5,23 +5,23 @@ export const getAllReviewRatings = async () => {
     return response;
 };
 
-export const getReviewRatingById = async () => {
-    const response = await axiosInstance.get("/review_ratings/1");
+export const getReviewRatingById = async (id) => {
+    const response = await axiosInstance.get(`/review_ratings/${id}`);
     return response;
 };
 
-export const createReviewRating = async () => {
-    const response = await axiosInstance.post("/review_ratings");
+export const createReviewRating = async (userId, reviewRating) => {
+    const response = await axiosInstance.post(`/review_ratings/${userId}`, reviewRating);
     return response;
 };
 
-export const updateReviewRating = async () => {
-    const response = await axiosInstance.put("/review_ratings/7");
+export const updateReviewRating = async (id, reviewRating) => {
+    const response = await axiosInstance.put(`/review_ratings/${id}`, reviewRating);
     return response;
 };
 
 
-export const deleteReviewRating = async () => {
-    const response = await axiosInstance.delete("/review_ratings/7");
+export const deleteReviewRating = async (id) => {
+    const response = await axiosInstance.delete(`/review_ratings/${id}`);
     return response;
 };

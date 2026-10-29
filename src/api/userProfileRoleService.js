@@ -5,23 +5,23 @@ export const getAllUserRoles = async () => {
     return response;
 };
 
-export const getUserRoleById = async () => {
-    const response = await axiosInstance.get("/user_profile_roles/1");
+export const getUserRoleById = async (id) => {
+    const response = await axiosInstance.get(`/user_profile_roles/${id}`);
     return response;
 };
 
-export const createUserRole = async () => {
-    const response = await axiosInstance.post("/user_profile_roles");
+export const createUserRole = async (roleData) => {
+    const response = await axiosInstance.post("/user_profile_roles", roleData);
     return response;
 };
 
-export const updateUserRole = async () => {
-    const response = await axiosInstance.put("/user_profile_roles/7");
+export const updateUserRole = async (id, roleData) => {
+    const response = await axiosInstance.put(`/user_profile_roles/${id}`, roleData);
     return response;
 };
 
 
-export const deleteUserRole = async () => {
-    const response = await axiosInstance.delete("/user_profile_roles/7");
+export const deleteUserRole = async (id) => {
+    const response = await axiosInstance.delete(`/user_profile_roles/${id}`);
     return response;
 };

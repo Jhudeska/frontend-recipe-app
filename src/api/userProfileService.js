@@ -5,23 +5,23 @@ export const getAllUserProfiles = async () => {
     return response;
 };
 
-export const getUserProfileById = async () => {
-    const response = await axiosInstance.get("/user_profiles/1");
+export const getUserProfileById = async (id) => {
+    const response = await axiosInstance.get(`/user_profiles/${id}`);
     return response;
 };
 
-export const createUserProfile = async () => {
-    const response = await axiosInstance.post("/user_profiles");
+export const createUserProfile = async (userProfile) => {
+    const response = await axiosInstance.post("/user_profiles", userProfile);
     return response;
 };
 
-export const updateUserProfile = async () => {
-    const response = await axiosInstance.put("/user_profiles/7");
+export const updateUserProfile = async (id, userProfile) => {
+    const response = await axiosInstance.put(`/user_profiles/${id}`, userProfile);
     return response;
 };
 
 
-export const deleteUserProfile = async () => {
-    const response = await axiosInstance.delete("/user_profiles/7");
+export const deleteUserProfile = async (id) => {
+    const response = await axiosInstance.delete(`/user_profiles/${id}`);
     return response;
 };

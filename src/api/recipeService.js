@@ -1,30 +1,36 @@
 import axiosInstance from "./axiosInstance";
 
 
-const USER_ID = 1;
-
 export const getAllRecipes = async () => {
     const response = await axiosInstance.get(`/recipes`);
     return response;
 };
 
-export const getRecipeById = async () => {
-    const response = await axiosInstance.get(`/recipes/${USER_ID}`);
+export const getRecipeById = async (id) => {
+    const response = await axiosInstance.get(`/recipes/${id}`);
     return response;
 };
 
-export const createRecipe = async () => {
-    const response = await axiosInstance.post(`/recipes`);
+export const createRecipe = async (recipe) => {
+    const response = await axiosInstance.post(`/recipes`, recipe);
     return response;
 };
 
-export const updateRecipe = async () => {
-    const response = await axiosInstance.put(`/recipes/${USER_ID}`);
+export const updateRecipe = async (id, recipe) => {
+    const response = await axiosInstance.put(`/recipes/${id}`, recipe);
     return response;
 };
 
 
-export const deleteRecipe = async () => {
-    const response = await axiosInstance.delete(`/recipes/${USER_ID}`);
+export const deleteRecipe = async (id) => {
+    const response = await axiosInstance.delete(`/recipes/${id}`);
+    return response;
+};
+
+
+export const searchRecipes = async (query) => {
+    const response = await axiosInstance.get("/recipes/search", {
+        params: { query }
+    });
     return response;
 };
