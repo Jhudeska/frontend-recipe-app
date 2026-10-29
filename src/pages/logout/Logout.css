@@ -1,0 +1,10 @@
+.logout p {
+    color: lightslategray;
+    font-weight: bolder;
+    text-align: center;
+    font-size: 56px;
+}
+
+h1 .logout__heading {
+    text-align: left;
+}
