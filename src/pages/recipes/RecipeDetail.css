@@ -1,0 +1,200 @@
+/* Recipe page header */
+.recipe-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    gap: 16px;
+}
+
+.recipe-page-title {
+    margin-bottom: 0;
+}
+
+/* Action buttons */
+.recipe-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+/* Main recipe card */
+.recipe-card {
+    width: 100%;
+    max-width: 900px;
+    box-sizing: border-box;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    padding: 30px;
+}
+
+/* Recipe image */
+.recipe-image {
+    display: block;
+    width: 420px;
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 16px;
+}
+
+/* Recipe information */
+.recipe-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.recipe-info-content {
+    min-width: 0;
+}
+
+.recipe-name {
+    font-size: 20px;
+    margin: 0 0 8px;
+}
+
+/* Recipe tags */
+.recipe-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 10px;
+}
+
+.tag {
+    display: inline-block;
+}
+
+/* Recipe metadata */
+.recipe-meta {
+    font-size: 12px;
+    color: #555;
+    margin: 0;
+}
+
+.stars {
+    font-size: 16px;
+    white-space: nowrap;
+}
+
+/* Ingredients and kitchen equipment */
+.recipe-details {
+    display: flex;
+    gap: 60px;
+    margin: 26px 0;
+}
+
+.recipe-detail-section h3,
+.recipe-instructions h3,
+.recipe-comments h3 {
+    font-size: 13px;
+    margin: 0 0 8px;
+}
+
+.recipe-detail-section p,
+.recipe-comments p {
+    font-size: 12px;
+    color: #555;
+    line-height: 1.8;
+    margin: 0;
+}
+
+/* Preparation instructions */
+.recipe-instructions p {
+    font-size: 12px;
+    color: #555;
+    line-height: 1.7;
+    margin: 0 0 20px;
+}
+
+/* Comments */
+.recipe-comments p {
+    line-height: 1.7;
+}
+
+/* Responsive layout */
+@media (max-width: 600px) {
+    .recipe-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .recipe-actions {
+        width: 100%;
+    }
+
+    .recipe-card {
+        padding: 16px;
+    }
+
+    .recipe-info {
+        gap: 12px;
+    }
+
+    .recipe-details {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+
+}
+
+.recipe-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.recipe-page-title {
+    margin: 0;
+}
+
+.recipe-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    flex-shrink: 0;
+}
+
+@media print {
+    /* Verberg alles standaard */
+    body * {
+        visibility: hidden;
+    }
+
+    /* Maak alleen de receptkaart zichtbaar */
+    .recipe-card,
+    .recipe-card * {
+        visibility: visible;
+    }
+
+    /* Plaats de receptkaart bovenaan de printpagina */
+    .recipe-card {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        max-width: none;
+        margin: 0;
+        padding: 20px;
+        border: none;
+        box-sizing: border-box;
+    }
+
+    /* Verwijder achtergrondkleuren en schaduwen */
+    .recipe-card {
+        box-shadow: none;
+        background: white;
+    }
+
+    /* Verberg eventuele knoppen binnen de receptkaart */
+    .recipe-card button,
+    .recipe-card .btn {
+        display: none !important;
+    }
+}

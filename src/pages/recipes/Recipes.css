@@ -8,12 +8,25 @@
 
 .thead{
     border-top: 10px solid black;
+    padding-bottom: 10px;
+
+}
+
+.data thead th {
+    border-bottom: 2px solid #111;
+
 }
 
 tr {
     padding: 10px;
 }
 
-.recipes_img{
-    width: 120px;
+.recipes_img {
+    width: 135px;
+    height: 85px;
+    object-fit: cover;
+    border-radius: 6px;
+    display: block;
+    margin-top: 5px;
 }
+

@@ -1,74 +1,157 @@
 import './Recipes.css'
 import soup from "../../assets/kippensoep.png";
-import Button from "../../components/button/Button.jsx";
 import {Link} from "react-router-dom";
+import{ useEffect, useState } from "react";
+import {
+    getAllRecipes,
+    deleteRecipe,
+} from "../../api/recipeService.js";
+import CookingSpinner from "../../components/spinner/CookingSpinner.jsx";
+import MessageLabel from "../../components/messagelabel/MessageLabel.jsx";
+import Button from "../../components/button/Button.jsx";
+// import { deleteRecipe } from "../../api/recipeService.js";
+import { useNavigate } from "react-router-dom";
 
 
 function Recipes() {
+    const [recipes, setRecipes] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
+    const navigate = useNavigate();
+
+    async function fetchRecipes() {
+        try {
+            setError("");
+
+            const response = await getAllRecipes();
+            setRecipes(response.data);
+        } catch (err) {
+            setError(<MessageLabel variant="error">Recipes ophalen mislukt.</MessageLabel> );
+            console.error(err);
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    useEffect(() => {
+        fetchRecipes();
+    }, []);
+
+
+    async function handleDelete(id) {
+        if (!window.confirm("Recipe verwijderen?")) return;
+
+        try {
+            await deleteRecipe(id);
+            await fetchRecipes();
+        } catch (err) {
+            setError("Recipe verwijderen mislukt.");
+            console.error(err);
+        }
+    }
+
+    if (loading) {
+        return <CookingSpinner text="Recipes laden..."> <p>Recipes laden...</p> </CookingSpinner>;
+    }
+
+    const handleDeleteRecipe = async (recipeId) => {
+        const confirmed = window.confirm(
+            "Weet je zeker dat je dit recept wilt verwijderen?"
+        );
+
+        if (!confirmed) return;
+
+        try {
+            await deleteRecipe(recipeId);
+
+            setRecipes((previousRecipes) =>
+                previousRecipes.filter(
+                    (recipe) => recipe.recipeId !== recipeId
+                )
+            );
+        } catch (error) {
+            console.error("Error deleting recipe:", error);
+
+            alert(
+                error.response?.data?.message ||
+                "Het recept kon niet worden verwijderd."
+            );
+        }
+    };
     return (
         <section className="outer-container page-container">
             <div className="inner-container">
                 <h1>My Recipes</h1>
 
+                {error && <p role="alert">{error}</p>}
                 <table className="data">
                     <thead>
                     <tr className="thead">
                         <th></th>
                         <th>Title</th>
                         <th>Description</th>
-                        <th>Add</th>
                         <th>Edit</th>
                         <th>Delete</th>
                     </tr>
                     </thead>
 
                     <tbody>
-                    <tr>
+                    {recipes.map((recipe) => (
+                    <tr key={recipe.id}>
                         <td>
-                            <img className="recipes_img" src={soup} alt="Kippensoep" />
+                            <img className="recipes_img" src={recipe.imageUrl || soup} alt={recipe.name} />
                         </td>
                         <td>
-                            <strong>Kippensoep</strong>
-                        </td>
-                        <td>Lorem50</td>
-                        <td>
-                            <Link to="/add_recipes" className="mini-btn x">add</Link>
-                        </td>
-                        <td>
-                            <Link to="/update_recipes" className="mini-btn x">edit</Link>
-                        </td>
-                        <td>
-                            <Link to="/add_recipes" className="mini-btn x">delete</Link>
-                        </td>
-                    </tr>
+                            <Link to={`/recipes/${recipe.recipeId}`} className="btn btn-outline">
+                                <strong>{recipe.title}</strong>
+                            </Link>
 
-                    <tr>
+                        </td>
+                        <td>{recipe.description}</td>
                         <td>
-                            <img className="recipes_img" src={soup} alt="Kippensoep" />
+                            <Button
+                                // to="/update_recipes"
+                                state={{ recipeId: recipe.id }}
+                                btnColor="gray-outline"
+                                text="Edit"
+                                // handleClick={() => navigate("/update_recipes")}
+                                handleClick={() => navigate(`/recipes/${recipe.recipeId}/edit`)}
+                            >
+
+                            </Button>
                         </td>
                         <td>
-                            <strong>Kippensoep</strong>
+                            <Button
+                                btnColor="gray-outline"
+                                text="Delete"
+                                handleClick={() => handleDeleteRecipe(recipe.id)}
+                            >
+                                Delete
+                            </Button>
                         </td>
-                        <td>Lorem50</td>
-                        <td>
-                            <button  to="/add_recipes" className="mini-btn x">add</button>
-                        </td>
-                        <td>
-                            <button className="mini-btn x">edit</button>
-                        </td>
-                        <td>
-                            <button className="mini-btn x">delete</button>
-                        </td>
+
                     </tr>
+                    ))}
+                    {recipes.length === 0 && (
+                        <tr>
+                        <td colSpan="5">
+                        No recipes found.
+                        </td>
+                        </tr>
+                        )}
                     </tbody>
                 </table>
 
                 <div style={{ textAlign: "right", marginTop: "16px" }}>
-                    <a href="/" className="btn btn-primary">
-                        Save
-                    </a>
+                    <Button
+                        // to="/add_recipes"
+                        text="Add Recipe"
+                        btnColor="green-filled"
+                        buttonType="button"
+                        handleClick={() => navigate("/add_recipes")}
+                    >
+                    </Button>
                 </div>
-
 
             </div>
         </section>
