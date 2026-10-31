@@ -24,12 +24,7 @@ export const uploadRecipeImage = async (file, recipeId) => {
 
     return axiosInstance.post(
         "/recipe_images/upload",
-        formData,
-        {
-            headers: {
-                "Content-Type": "multipart/form-data",
-            },
-        }
+        formData
     );
 };
 
