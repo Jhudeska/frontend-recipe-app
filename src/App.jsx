@@ -1,4 +1,3 @@
-
 import './App.css'
 import {useState} from "react";
 import { Route, Routes} from "react-router-dom";
@@ -19,9 +18,8 @@ import AddRecipe from "./pages/recipes/AddRecipe.jsx";
 import UpdateRecipe from "./pages/recipes/UpdateRecipe.jsx";
 import RecipeDetail from "./pages/recipes/RecipeDetail.jsx";
 import Overview1 from "./pages/overview/Overview.jsx";
-import keycloak from "./helpers/keycloak.js";
 import Logout from "./pages/logout/Logout.jsx";
-
+import { useAuth } from "./context/AuthContext.jsx";
 
 
 function App() {
@@ -31,46 +29,20 @@ function App() {
             ? "splash"
             : "website";
     });
-        const handleLogin = async () => {
-            try {
-                await keycloak.login({
-                    redirectUri: window.location.origin,
-                });
-            } catch (error) {
-                console.error("Login failed:", error);
-            }
-        };
 
-        const handleRegister = async () => {
-            try {
-                await keycloak.register({
-                    redirectUri: window.location.origin,
-                });
-            } catch (error) {
-                console.error("Registration failed:", error);
-            }
-        };
+    const { isAuthenticated, login, register } = useAuth();
 
-        // const handleLogout = async () => {
-        //     try {
-        //         await keycloak.logout({
-        //             redirectUri: window.location.origin,
-        //         });
-        //     } catch (error) {
-        //         console.error("Logout failed:", error);
-        //     }
-        // };
 
-        if (!keycloak.authenticated) {
+    if (!isAuthenticated) {
             return (
                 <main>
                     <h1>Welcome</h1>
 
-                    <button onClick={handleLogin}>
+                    <button onClick={login}>
                         Login
                     </button>
 
-                    <button onClick={handleRegister}>
+                    <button onClick={register}>
                         Register
                     </button>
                 </main>
@@ -207,6 +179,7 @@ function App() {
 
             </Routes>
           </section>
+
 
           <Footer />
 

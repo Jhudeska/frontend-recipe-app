@@ -11,17 +11,19 @@ import {
 } from "../../api/favoriteService.js";
 import {getAllRecipes} from "../../api/recipeService.js";
 import MessageLabel from "../../components/messagelabel/MessageLabel.jsx";
-import keycloak from "../../helpers/keycloak.js";
-
+import { useAppContext } from "../../context/AppContext";
+import {useAuth} from "../../context/AuthContext.jsx";
 
 function Overview() {
+    const { loading, setLoading } = useAppContext();
+    const { user } = useAuth();
+
     const [recipes, setRecipes] = useState([]);
     const [favorites, setFavorites] = useState([]);
     const [favoriteError, setFavoriteError] = useState("");
 
-    const [loading, setLoading] = useState(true);
+    // const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
-    console.log(keycloak.token);
 
     useEffect(() => {
         async function fetchRecipes() {
@@ -104,6 +106,7 @@ function Overview() {
     return (
         <section className="outer-container page-container">
             <div className="inner-container">
+
                 {loading && <p><CookingSpinner  text="Recepten bereiden..."/></p>}
 
                 {error && <MessageLabel variant="error"><p role="alert">{error}</p></MessageLabel>}
@@ -118,7 +121,7 @@ function Overview() {
 
                 <h3>
                     Welcome, {" "}
-                    {keycloak.tokenParsed?.preferred_username}
+                    {user?.username}
                 </h3>
 
                 <div className="home-intro">

@@ -5,6 +5,8 @@ import App from './App.jsx'
 import {BrowserRouter} from "react-router-dom";
 import keycloak from "./helpers/keycloak.js";
 import {AppProvider} from "./context/AppContext.jsx";
+import {AuthProvider} from "./context/AuthContext.jsx";
+
 
 keycloak.init({
     onLoad: "login-required",
@@ -18,7 +20,9 @@ keycloak.init({
             <StrictMode>
                 <BrowserRouter>
                         <AppProvider>
-                            <App />
+                            <AuthProvider>
+                                <App />
+                            </AuthProvider>
                         </AppProvider>
                 </BrowserRouter>
             </StrictMode>

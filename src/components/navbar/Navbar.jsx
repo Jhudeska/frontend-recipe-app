@@ -3,12 +3,13 @@ import logo from "../../assets/receta-logo.svg"
 import userBadge from "../../assets/user-regular-full.svg" ;
 import {NavLink, useNavigate} from "react-router-dom";
 import {useState} from "react";
-import keycloak from "../../helpers/keycloak.js";
+import {useAuth} from "../../context/AuthContext.jsx";
 
 
 function Navbar() {
     const [query, setQuery] = useState("");
     const navigate = useNavigate();
+    const { logout } = useAuth();
 
     const handleSearch = (event) => {
         event.preventDefault();
@@ -19,16 +20,6 @@ function Navbar() {
 
         navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
     };
-
-    async function handleLogout() {
-        try {
-            await keycloak.logout({
-                redirectUri: window.location.origin,
-            });
-        } catch (error) {
-            console.error("Logout failed:", error);
-        }
-    }
 
     return (
         <nav className="navbar">
@@ -115,21 +106,10 @@ function Navbar() {
                     to="/logout"
                     className="logout"
                 >
-                    <button className="green-outline" onClick={handleLogout}>
+                    <button className="green-outline" onClick={logout}>
                         Logout
                     </button>
                 </NavLink>
-
-                {/*<main>*/}
-                {/*    <h1>*/}
-                {/*        Welcome,{" "}*/}
-                {/*        {keycloak.tokenParsed?.preferred_username}*/}
-                {/*    </h1>*/}
-
-                {/*    <button onClick={handleLogout}>*/}
-                {/*        Logout*/}
-                {/*    </button>*/}
-                {/*</main>*/}
 
             </section>
 

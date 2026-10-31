@@ -99,7 +99,18 @@ function Recipes() {
                     {recipes.map((recipe) => (
                     <tr key={recipe.id}>
                         <td>
-                            <img className="recipes_img" src={recipe.imageUrl || soup} alt={recipe.name} />
+                            {/*<img className="recipes_img" src={recipe.imageUrl || soup} alt={recipe.name} />*/}
+                            <img
+                                className="recipes_img"
+                                src={
+                                    recipe.imageUrl
+                                        ? recipe.imageUrl.startsWith("http")
+                                            ? recipe.imageUrl
+                                            : `http://localhost:8080${recipe.imageUrl.startsWith("/") ? "" : "/"}${recipe.imageUrl}`
+                                        : soup
+                                }
+                                alt={recipe.title || "Recipe"}
+                            />
                         </td>
                         <td>
                             <Link to={`/recipes/${recipe.recipeId}`} className="btn btn-outline">
