@@ -16,13 +16,13 @@ import {useAuth} from "../../context/AuthContext.jsx";
 
 function Overview() {
     const { loading, setLoading } = useAppContext();
+    const {hasRole } = useAuth();
     const { user } = useAuth();
 
     const [recipes, setRecipes] = useState([]);
     const [favorites, setFavorites] = useState([]);
     const [favoriteError, setFavoriteError] = useState("");
 
-    // const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
 
     useEffect(() => {
@@ -119,21 +119,24 @@ function Overview() {
                     <MessageLabel variant="error"><p role="alert">{favoriteError}</p></MessageLabel>
                 )}
 
+                {(hasRole("ROLE_CHEF") || hasRole("ROLE_ADMIN")) && (
                 <h3>
                     Welcome, {" "}
                     {user?.username}
                 </h3>
+                )}
 
                 <div className="home-intro">
                     <h2 className="home-intro__text">
                         Got A Recipe That Rocks?
                     </h2>
-
+                    {(hasRole("ROLE_CHEF") || hasRole("ROLE_ADMIN")) && (
                     <Link to="/add_recipes"
                           className="green-filled home-intro__button"
                     >
                         + Add Recipe
                     </Link>
+                    )}
                 </div>
 
                     <div className="section-title">

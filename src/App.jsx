@@ -19,7 +19,9 @@ import UpdateRecipe from "./pages/recipes/UpdateRecipe.jsx";
 import RecipeDetail from "./pages/recipes/RecipeDetail.jsx";
 import Overview1 from "./pages/overview/Overview.jsx";
 import Logout from "./pages/logout/Logout.jsx";
-import { useAuth } from "./context/AuthContext.jsx";
+import PrivateRoute from "./components/PrivateRoute/PrivateRoute.jsx";
+import RoleRoute from "./components/RoleRoute/RoleRoute.jsx";
+import SignInKeycloak from "./components/signinkeycloak/SignInKeycloak.jsx";
 
 
 function App() {
@@ -29,25 +31,6 @@ function App() {
             ? "splash"
             : "website";
     });
-
-    const { isAuthenticated, login, register } = useAuth();
-
-
-    if (!isAuthenticated) {
-            return (
-                <main>
-                    <h1>Welcome</h1>
-
-                    <button onClick={login}>
-                        Login
-                    </button>
-
-                    <button onClick={register}>
-                        Register
-                    </button>
-                </main>
-            );
-        }
 
   return (
     <>
@@ -93,12 +76,11 @@ function App() {
       >
 
 
-
-
           <Header />
 
           <section className="outer-container header-test">
             <div className="inner-container">
+
               <Navbar />
             </div>
           </section>
@@ -114,12 +96,20 @@ function App() {
 
               <Route
                   path="/add_recipes"
-                  element={<AddRecipe />}
+                  element={
+                      <RoleRoute allowedRoles={["ROLE_CHEF", "ROLE_ADMIN"]}>
+                            <AddRecipe />
+                      </RoleRoute>
+              }
               />
 
               <Route
                   path="/update_recipes"
-                  element={<UpdateRecipe />}
+                  element={
+                      <PrivateRoute allowedRoles={["ROLE_CHEF", "ROLE_ADMIN"]}>
+                            <UpdateRecipe />
+                      </PrivateRoute>
+              }
               />
 
               <Route
@@ -139,7 +129,11 @@ function App() {
 
               <Route
                   path="/favorites"
-                  element={<Favorites />}
+                  element={
+                      <PrivateRoute>
+                            <Favorites />
+                      </PrivateRoute>
+              }
 
               /><Route
                   path="/search"
@@ -150,6 +144,11 @@ function App() {
                 element={<SignIn />}
             />
 
+                <Route
+                    path="/sign_in_keycloak"
+                    element={<SignInKeycloak />}
+                />
+
               <Route
                   path="/contact"
                   element={<Contact />}
@@ -157,16 +156,29 @@ function App() {
 
                 <Route
                     path="/recipes/:id/edit"
-                    element={<UpdateRecipe />}
+                    element={
+                        <PrivateRoute>
+                            <UpdateRecipe />
+                        </PrivateRoute>
+                }
+
                 />
 
               <Route
                   path="/profile"
-                  element={<Profile />}
+                  element={
+                      <PrivateRoute allowedRoles={["ROLE_CHEF", "ROLE_ADMIN", "ROLE_USER"]}>
+                            <Profile />
+                      </PrivateRoute>
+              }
               />
 
               <Route path="/admin"
-                     element={<Admin />}
+                     element={
+                         <RoleRoute allowedRoles={["ROLE_ADMIN"]}>
+                                <Admin />
+                         </RoleRoute>
+              }
               />
                 <Route path="/logout"
                        element={<Logout />}

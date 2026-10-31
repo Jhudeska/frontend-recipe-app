@@ -9,7 +9,7 @@ import {useAuth} from "../../context/AuthContext.jsx";
 function Navbar() {
     const [query, setQuery] = useState("");
     const navigate = useNavigate();
-    const { logout } = useAuth();
+    const { isAuthenticated, isLoading, logout, hasRole } = useAuth();
 
     const handleSearch = (event) => {
         event.preventDefault();
@@ -28,7 +28,7 @@ function Navbar() {
                 <NavLink to="/" className="navbar__logo">
                     <img
                         src={logo}
-                        alt="My Website"
+                        alt="Receta logo"
                     />
                     <span className="navbar__logo-text">Receta</span>
                 </NavLink>
@@ -52,19 +52,20 @@ function Navbar() {
                 </NavLink>
 
                 <NavLink
-                    to="/favorites"
-                    className="green-outline"
-                >
-                    Favorites
-                </NavLink>
-
-                <NavLink
                     to="/contact"
                     className="green-outline"
                 >
                     Contact
                 </NavLink>
 
+                {isAuthenticated && (
+                <NavLink
+                    to="/favorites"
+                    className="green-outline"
+                >
+                    Favorites
+                </NavLink>
+                )}
             </section>
 
 
@@ -94,22 +95,51 @@ function Navbar() {
 
                 </form>
 
-                <NavLink
-                    to="/profile"
-                    className="profile-link"
-                >
-                  <img className="user-badge" src={userBadge} alt="Profile" />
-                    Profile
-                </NavLink>
+                {!isLoading && (
+                    isAuthenticated ? (
+                        <>
+                            <NavLink
+                                to="/profile"
+                                className="profile-link"
+                            >
+                                <img className="user-badge" src={userBadge} alt="Profile" />
+                                Profile
+                            </NavLink>
 
-                <NavLink
-                    to="/logout"
-                    className="logout"
-                >
-                    <button className="green-outline" onClick={logout}>
-                        Logout
-                    </button>
-                </NavLink>
+                            {hasRole("ROLE_ADMIN") && (
+                                <NavLink to="/admin" className="green-outline">
+                                Admin
+                                </NavLink>
+                                )}
+
+                            <button
+                                type="button"
+                                className="green-outline logout"
+                                onClick={logout}
+                            >
+                                Logout
+                            </button>
+                        </>
+                    ) : (
+                        <>
+                            <NavLink
+                                to="/sign_in"
+                                className="green-outline"
+                            >
+                                Sign in
+                            </NavLink>
+                            <NavLink
+                                to="/sign_in_keycloak"
+                                className="green-outline"
+                            >
+                                Sign in KeyCloak
+                            </NavLink>
+                        </>
+
+                    )
+                )}
+
+
 
             </section>
 

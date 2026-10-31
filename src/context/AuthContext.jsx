@@ -5,63 +5,70 @@ const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
 
-    const [user, setUser] = useState(() => {
-        if (!keycloak.authenticated) {
-            return null;
+    const [user, setUser] = useState(null);
+    const [roles, setRoles] = useState([]);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+
+    // Controleer de actuele Keycloak-status
+    function updateAuthState() {
+
+        const authenticated = keycloak.authenticated ?? false;
+
+        console.log("========== AUTH CONTEXT ==========");
+        console.log("Authenticated:", authenticated);
+        console.log("JWT available:", !!keycloak.token);
+        console.log("Username:", keycloak.tokenParsed?.preferred_username);
+
+        console.log(
+            "Roles:",
+            keycloak.tokenParsed
+                ?.resource_access
+                ?.["receta-app"]
+                ?.roles ?? []
+        );
+
+        console.log("==================================");
+
+        setIsAuthenticated(authenticated);
+
+        if (authenticated) {
+
+            setUser({
+                username: keycloak.tokenParsed?.preferred_username,
+                email: keycloak.tokenParsed?.email,
+                firstName: keycloak.tokenParsed?.given_name,
+                lastName: keycloak.tokenParsed?.family_name,
+            });
+
+            setRoles(
+                keycloak.tokenParsed
+                    ?.resource_access
+                    ?.["receta-app"]
+                    ?.roles ?? []
+            );
+
+        } else {
+
+            setUser(null);
+            setRoles([]);
+
         }
+    }
 
-        return {
-            username: keycloak.tokenParsed?.preferred_username,
-            email: keycloak.tokenParsed?.email,
-            firstName: keycloak.tokenParsed?.given_name,
-            lastName: keycloak.tokenParsed?.family_name,
-        };
-    });
-
-    // const [user, setUser] = useState(null);
-    // const [roles, setRoles] = useState([]);
-    // const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-    const [roles, setRoles] = useState(() => {
-        return keycloak.tokenParsed?.resource_access?.["receta-app"]?.roles ?? [];
-    });
-
-    const [isAuthenticated, setIsAuthenticated] = useState(
-        keycloak.authenticated ?? false
-    );
-
+    // Keycloak initialisatie is al uitgevoerd in main.jsx
     useEffect(() => {
 
-        function updateAuthState() {
+        // Bestaande Keycloak-status ophalen
+        updateAuthState();
 
-            const authenticated = keycloak.authenticated ?? false;
-
-            setIsAuthenticated(authenticated);
-
-            if (authenticated) {
-
-                setUser({
-                    username: keycloak.tokenParsed?.preferred_username,
-                    email: keycloak.tokenParsed?.email,
-                    firstName: keycloak.tokenParsed?.given_name,
-                    lastName: keycloak.tokenParsed?.family_name,
-                });
-
-                setRoles(
-                    keycloak.tokenParsed?.resource_access?.["receta-app"]?.roles ?? []
-                );
-
-            } else {
-
-                setUser(null);
-                setRoles([]);
-
-            }
-        }
-
+        // Keycloak events
         keycloak.onAuthSuccess = updateAuthState;
         keycloak.onAuthLogout = updateAuthState;
         keycloak.onAuthRefreshSuccess = updateAuthState;
+
+        // Keycloak is al geïnitialiseerd
+        setIsLoading(false);
 
         return () => {
             keycloak.onAuthSuccess = null;
@@ -72,14 +79,19 @@ export function AuthProvider({ children }) {
     }, []);
 
 
-    const value = {
-        user,
-        roles,
-        isAuthenticated,
-        login,
-        register,
-        logout,
+    // Controleer één rol
+    const hasRole = (role) => {
+        return roles.includes(role);
     };
+
+    // Controleer meerdere mogelijke rollen
+    const hasAnyRole = (allowedRoles) => {
+        return allowedRoles.some(role =>
+            roles.includes(role)
+        );
+    };
+
+
 
     async function login() {
         try {
@@ -110,6 +122,18 @@ export function AuthProvider({ children }) {
             console.error("Logout failed:", error);
         }
     }
+
+    const value = {
+        user,
+        roles,
+        isAuthenticated,
+        isLoading,
+        hasRole,
+        hasAnyRole,
+        login,
+        register,
+        logout,
+    };
 
     return (
         <AuthContext.Provider value={value}>
