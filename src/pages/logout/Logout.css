@@ -8,3 +8,7 @@
 h1 .logout__heading {
     text-align: left;
 }
+
+.logout__img {
+    max-width: 300px;
+}

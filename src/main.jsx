@@ -4,8 +4,9 @@ import { createRoot } from 'react-dom/client'
 import App from './App.jsx'
 import {BrowserRouter} from "react-router-dom";
 import { initKeycloak } from './helpers/keycloak.js';
-import {AppProvider} from "./context/AppContext.jsx";
+import {AppProvider} from "./context/AppStatusContext.jsx";
 import {AuthProvider} from "./context/AuthContext.jsx";
+import {FavoriteProvider} from "./context/FavoriteContext.jsx";
 
 async function startApp() {
 
@@ -16,15 +17,17 @@ async function startApp() {
         createRoot(
             document.getElementById("root")
         ).render(
-            <StrictMode>
+            // <StrictMode>
                 <BrowserRouter>
-                        <AppProvider>
-                            <AuthProvider>
+                    <AppProvider>
+                        <AuthProvider>
+                                <FavoriteProvider>
                                 <App />
-                            </AuthProvider>
-                        </AppProvider>
+                                </FavoriteProvider>
+                        </AuthProvider>
+                    </AppProvider>
                 </BrowserRouter>
-            </StrictMode>
+            // </StrictMode>
         );
 
     } catch (error) {

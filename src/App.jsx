@@ -17,7 +17,7 @@ import Admin from "./pages/admin/Admin.jsx";
 import AddRecipe from "./pages/recipes/AddRecipe.jsx";
 import UpdateRecipe from "./pages/recipes/UpdateRecipe.jsx";
 import RecipeDetail from "./pages/recipes/RecipeDetail.jsx";
-import Overview1 from "./pages/overview/Overview.jsx";
+import Overview from "./pages/overview/Overview.jsx";
 import Logout from "./pages/logout/Logout.jsx";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute.jsx";
 import RoleRoute from "./components/RoleRoute/RoleRoute.jsx";
@@ -66,7 +66,6 @@ function App() {
       {/* =====================
           WEBSITE
       ===================== */}
-
       <main
           className={`site ${
               introStep === "website"
@@ -91,7 +90,7 @@ function App() {
 
               <Route
                   path="/"
-                  element={<Overview1 />}
+                  element={<Overview />}
               />
 
               <Route

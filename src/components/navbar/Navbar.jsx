@@ -44,12 +44,14 @@ function Navbar() {
                     Home
                 </NavLink>
 
+                {isAuthenticated && (
                 <NavLink
                     to="/recipes"
                     className="green-outline"
                 >
                     Recipes
                 </NavLink>
+                )}
 
                 <NavLink
                     to="/contact"

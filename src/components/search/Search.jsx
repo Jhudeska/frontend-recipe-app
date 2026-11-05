@@ -2,40 +2,46 @@ import "./Search.css"
 import { useEffect, useState} from "react";
 import { searchRecipes } from "../../api/recipeService.js";
 import { useSearchParams } from "react-router-dom";
+import { useAppContext } from "../../context/AppStatusContext.jsx";
+import CookingSpinner from "../spinner/CookingSpinner.jsx";
+import MessageLabel from "../messagelabel/MessageLabel.jsx";
 
 function Search() {
     const [searchParams, setSearchParams] = useSearchParams();
+    const {loading, setLoading, error, setError, clearError } = useAppContext();
 
     const query = searchParams.get("q") || "";
 
     const [inputValue, setInputValue] = useState(query);
     const [recipes, setRecipes] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("");
+
 
     // Synchroniseer het zoekveld met de URL
     useEffect(() => {
         setInputValue(query);
     }, [query]);
 
+
     // Eén useEffect voor het ophalen van recepten
     useEffect(() => {
         async function fetchRecipes() {
             if (!query.trim()) {
                 setRecipes([]);
-                setError("");
+                clearError();
                 setLoading(false);
                 return;
             }
 
             try {
                 setLoading(true);
-                setError("");
+                clearError();
 
                 const response = await searchRecipes(query);
                 setRecipes(response.data);
+
             } catch (error) {
                 console.error("Zoeken mislukt:", error);
+
                 setError("Zoeken is mislukt. Probeer het opnieuw.");
                 setRecipes([]);
             } finally {
@@ -64,6 +70,7 @@ function Search() {
                 <form onSubmit={handleSearch}>
                     <input
                         type="search"
+                        name="search"
                         placeholder="Search recipes..."
                         value={inputValue}
                         onChange={(event) => setInputValue(event.target.value)}
@@ -77,9 +84,15 @@ function Search() {
                     </button>
                 </form>
 
-                {loading && <p>Recepten zoeken...</p>}
+                {loading && (
+                    <CookingSpinner text="Recepten zoeken..." />
+                )}
 
-                {error && <p role="alert">{error}</p>}
+                {error && (
+                    <MessageLabel variant="error">
+                        {error}
+                    </MessageLabel>
+                )}
 
                 {!loading && !error && recipes.length > 0 && (
                     <div className="recipe-list">
@@ -120,7 +133,9 @@ function Search() {
                     !error &&
                     query.trim() !== "" &&
                     recipes.length === 0 && (
-                        <p>Geen recepten gevonden.</p>
+                        <MessageLabel variant="info">
+                            Geen recepten gevonden.
+                        </MessageLabel>
                     )}
             </div>
         </section>
