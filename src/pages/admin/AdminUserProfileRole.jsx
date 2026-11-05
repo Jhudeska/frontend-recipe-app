@@ -1,11 +1,5 @@
 import { useState, useEffect } from "react";
-
-import {
-    getAllUserRoles,
-    createUserRole,
-    updateUserRole,
-    deleteUserRole,
-} from "../../api/userProfileRoleService.js";
+import { getAllUserRoles, createUserRole, updateUserRole, deleteUserRole, } from "../../api/userProfileRoleService.js";
 
 const emptyForm = {
     role: "USER",

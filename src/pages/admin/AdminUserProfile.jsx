@@ -1,16 +1,8 @@
 import { useState, useEffect } from "react";
-
-import {
-    getAllUserProfiles,
-    createUserProfile,
-    updateUserProfile,
-    deleteUserProfile,
-} from "../../api/userProfileService.js";
-
+import { getAllUserProfiles, createUserProfile, updateUserProfile, deleteUserProfile} from "../../api/userProfileService.js";
 const emptyForm = {
     username: "",
     email: "",
-    password: "",
     profilePhotoUrl: "",
     bio: "",
 };
@@ -74,14 +66,6 @@ function AdminUserProfile() {
             return "Het e-mailadres mag maximaal 255 tekens bevatten.";
         }
 
-        if (isNew && user.password.length < 8) {
-            return "Het wachtwoord moet minimaal 8 tekens bevatten.";
-        }
-
-        if (!isNew && user.password && user.password.length < 8) {
-            return "Een nieuw wachtwoord moet minimaal 8 tekens bevatten.";
-        }
-
         if (
             user.profilePhotoUrl.trim() &&
             !/^https?:\/\/.+/i.test(user.profilePhotoUrl.trim())
@@ -99,10 +83,6 @@ function AdminUserProfile() {
             profilePhotoUrl: user.profilePhotoUrl.trim(),
             bio: user.bio.trim(),
         };
-
-        if (isNew || user.password) {
-            payload.password = user.password;
-        }
 
         return payload;
     };
@@ -144,7 +124,6 @@ function AdminUserProfile() {
         setEditUser({
             username: user.username ?? "",
             email: user.email ?? "",
-            password: "",
             profilePhotoUrl: user.profilePhotoUrl ?? "",
             bio: user.bio ?? "",
         });
@@ -304,27 +283,6 @@ function AdminUserProfile() {
                     }
                 />
             </td>
-
-            <td>
-                <input
-                    type="password"
-                    value={user.password}
-                    placeholder={
-                        isNew
-                            ? "Password (min. 8 characters)"
-                            : "Leave empty to keep current password"
-                    }
-                    onChange={(event) =>
-                        handleChange(
-                            formType,
-                            "password",
-                            event.target.value
-                        )
-                    }
-                    required={isNew}
-                    autoComplete="new-password"
-                />
-            </td>
         </>
     );
 
@@ -346,8 +304,6 @@ function AdminUserProfile() {
                     <th>Email</th>
                     <th>Profile photo</th>
                     <th>Bio</th>
-                    <th>Password</th>
-                    <th>Created</th>
                     <th>Save</th>
                     <th>Edit</th>
                     <th>Delete</th>
@@ -385,17 +341,8 @@ function AdminUserProfile() {
                                         )}
                                     </td>
                                     <td>{user.bio ?? ""}</td>
-                                    <td>••••••••</td>
                                 </>
                             )}
-
-                            <td>
-                                {user.created_at
-                                    ? new Date(
-                                        user.created_at
-                                    ).toLocaleDateString("nl-NL")
-                                    : "—"}
-                            </td>
 
                             <td>
                                 {isEditing && (
