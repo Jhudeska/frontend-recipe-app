@@ -1,23 +1,18 @@
 import axiosInstance from "./axiosInstance";
 
-const USER_ID = 1;
-
-export const getAllFavorites = async () => {
-    const response = await axiosInstance.get(`/favorites/user/${USER_ID}`);
+export const getAllFavorites = async (userId) => {
+    const response = await axiosInstance.get(`/favorites/user/${userId}`);
     return response.data;
 };
 
-export const createFavorite = async (recipeId) => {
-    const response = await axiosInstance.post(`/favoritesuser/${USER_ID}/recipe/${recipeId}`,
-        {
-            recipeId: recipeId
-        }
-    );
-    return response;
+export const createFavorite = async (userId, recipeId) => {
+    const response = await axiosInstance.post(`/favorites/user/${userId}/recipe/${recipeId}`, {
+        recipeId: recipeId
+    });
+    return response.data;
 };
 
-export const deleteFavorite = async (recipeId) => {
-    await axiosInstance.delete(
-        `/favorites/user/${USER_ID}/recipe/${recipeId}`
-    );
+export const deleteFavorite = async (userId, recipeId) => {
+    const response = await axiosInstance.delete(`/favorites/user/${userId}/recipe/${recipeId}`);
+    return response.data;
 };

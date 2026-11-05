@@ -1,8 +1,17 @@
 import axiosInstance from "./axiosInstance";
+import axios from "axios";
 
 
 export const getAllRecipes = async () => {
     const response = await axiosInstance.get(`/recipes`);
+    return response;
+};
+
+
+export const getAllRecipesWithAbortSignal = async (signal) => {
+    const response = await axiosInstance.get("/recipes", {
+        signal: signal
+    });
     return response;
 };
 
@@ -12,7 +21,7 @@ export const getRecipeById = async (id) => {
 };
 
 export const createRecipe = async (recipe) => {
-    const response = await axiosInstance.post(`/recipes`, recipe);
+    const response = await axiosInstance.post("/recipes", recipe);
     return response;
 };
 
