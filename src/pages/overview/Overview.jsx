@@ -1,17 +1,13 @@
 import './OverView.css'
 import { Link } from "react-router-dom";
-import RecipeCard from "../../components/recipecard/RecipeCard.jsx";
 import { useEffect, useState } from "react";
 import CookingSpinner from "../../components/spinner/CookingSpinner.jsx";
 import {recipeImages} from "../../helpers/recipeImages.js";
-import {
-    getAllFavorites,
-    createFavorite,
-    deleteFavorite
-} from "../../api/favoriteService.js";
-import {getAllRecipes} from "../../api/recipeService.js";
+import {getAllFavorites, createFavorite, deleteFavorite} from "../../api/favoriteService.js";
+import { getAllRecipesWithAbortSignal} from "../../api/recipeService.js";
 import MessageLabel from "../../components/messagelabel/MessageLabel.jsx";
-import { useAppContext } from "../../context/AppContext";
+import { useAppContext } from "../../context/AppStatusContext.jsx";
+import RecipeCard from "../../components/recipecard/RecipeCard.jsx";
 import {useAuth} from "../../context/AuthContext.jsx";
 
 function Overview() {
@@ -26,29 +22,47 @@ function Overview() {
     const [error, setError] = useState("");
 
     useEffect(() => {
+
+        //Abortcontroller geimplementeerd
+        const controller = new AbortController();
+
         async function fetchRecipes() {
             try {
                 setLoading(true);
                 setError("");
 
-                const response = await getAllRecipes();
+                const response = await getAllRecipesWithAbortSignal(controller.signal);
 
                 console.log("Recepten uit de backend:", response.data);
 
                 setRecipes(response.data);
             } catch (error) {
+
+                if (error.name === "CanceledError" ||
+                    error.name === "AbortError") {
+                    return;
+                }
+
                 console.error("Fout bij ophalen van recepten:", error);
                 setError(
                     "De recepten konden niet worden geladen. Probeer het later opnieuw."
                 );
             }finally {
-                setLoading(false);
+                if (!controller.signal.aborted) {
+                    setLoading(false);
+                }
             }
         }
 
         console.log(recipes);
         fetchRecipes();
-    }, []);
+
+        //abort
+        return () => {
+            controller.abort();
+        };
+
+    }, [setLoading]);
 
 
     useEffect(() => {
@@ -58,7 +72,7 @@ function Overview() {
                 setFavorites(data);
             } catch (error) {
                 console.error("Favorieten ophalen mislukt:", error);
-                setFavoriteError("Favorieten konden niet worden geladen.");
+                // setFavoriteError("Favorieten konden niet worden geladen.");
             }
         }
 

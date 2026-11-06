@@ -1,33 +1,35 @@
 import './Recipes.css'
 import soup from "../../assets/kippensoep.png";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import{ useEffect, useState } from "react";
-import {
-    getAllRecipes,
-    deleteRecipe,
-} from "../../api/recipeService.js";
+import {getAllRecipes, deleteRecipe} from "../../api/recipeService.js";
 import CookingSpinner from "../../components/spinner/CookingSpinner.jsx";
 import MessageLabel from "../../components/messagelabel/MessageLabel.jsx";
 import Button from "../../components/button/Button.jsx";
-// import { deleteRecipe } from "../../api/recipeService.js";
-import { useNavigate } from "react-router-dom";
+import { useAppContext } from "../../context/AppStatusContext.jsx";
 
 
 function Recipes() {
     const [recipes, setRecipes] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState("");
+
     const navigate = useNavigate();
+    const {loading, setLoading, error, setError, clearError } = useAppContext();
+
 
     async function fetchRecipes() {
         try {
-            setError("");
+            setLoading(true);
+            clearError();
 
             const response = await getAllRecipes();
+
             setRecipes(response.data);
-        } catch (err) {
-            setError(<MessageLabel variant="error">Recipes ophalen mislukt.</MessageLabel> );
-            console.error(err);
+
+        } catch (error) {
+            console.error("Recipes ophalen mislukt:", error);
+
+            setError("Recipes ophalen mislukt.");
+
         } finally {
             setLoading(false);
         }
@@ -38,23 +40,8 @@ function Recipes() {
     }, []);
 
 
-    async function handleDelete(id) {
-        if (!window.confirm("Recipe verwijderen?")) return;
-
-        try {
-            await deleteRecipe(id);
-            await fetchRecipes();
-        } catch (err) {
-            setError("Recipe verwijderen mislukt.");
-            console.error(err);
-        }
-    }
-
-    if (loading) {
-        return <CookingSpinner text="Recipes laden..."> <p>Recipes laden...</p> </CookingSpinner>;
-    }
-
     const handleDeleteRecipe = async (recipeId) => {
+
         const confirmed = window.confirm(
             "Weet je zeker dat je dit recept wilt verwijderen?"
         );
@@ -62,7 +49,12 @@ function Recipes() {
         if (!confirmed) return;
 
         try {
+            setLoading(true);
+            clearError();
+
             await deleteRecipe(recipeId);
+            await fetchRecipes();
+
 
             setRecipes((previousRecipes) =>
                 previousRecipes.filter(
@@ -70,20 +62,36 @@ function Recipes() {
                 )
             );
         } catch (error) {
-            console.error("Error deleting recipe:", error);
+            console.error("Recipe verwijderen mislukt.", error);
 
-            alert(
+            setError(
                 error.response?.data?.message ||
                 "Het recept kon niet worden verwijderd."
             );
+        }finally {
+            setLoading(false);
         }
     };
+
+    if (loading) {
+        return (
+            <CookingSpinner text="Recipes laden...">
+                <p>Recipes laden...</p>
+            </CookingSpinner>
+        );
+    }
+
     return (
         <section className="outer-container page-container">
             <div className="inner-container">
                 <h1>My Recipes</h1>
 
-                {error && <p role="alert">{error}</p>}
+                {error && (
+                    <MessageLabel variant="error">
+                        {error}
+                    </MessageLabel>
+                )}
+
                 <table className="data">
                     <thead>
                     <tr className="thead">
@@ -97,7 +105,7 @@ function Recipes() {
 
                     <tbody>
                     {recipes.map((recipe) => (
-                    <tr key={recipe.id}>
+                    <tr key={recipe.recipeId}>
                         <td>
                             {/*<img className="recipes_img" src={recipe.imageUrl || soup} alt={recipe.name} />*/}
                             <img
@@ -112,6 +120,13 @@ function Recipes() {
                                 alt={recipe.title || "Recipe"}
                             />
                         </td>
+                        {/*<td>*/}
+                        {/*    <img*/}
+                        {/*        className="recipes_img"*/}
+                        {/*        src={getImageUrl(recipe.imageUrl) || soup}*/}
+                        {/*        alt={recipe.title || "Recipe"}*/}
+                        {/*    />*/}
+                        {/*</td>*/}
                         <td>
                             <Link to={`/recipes/${recipe.recipeId}`} className="btn btn-outline">
                                 <strong>{recipe.title}</strong>
@@ -121,12 +136,9 @@ function Recipes() {
                         <td>{recipe.description}</td>
                         <td>
                             <Button
-                                // to="/update_recipes"
-                                state={{ recipeId: recipe.id }}
                                 btnColor="gray-outline"
                                 text="Edit"
-                                // handleClick={() => navigate("/update_recipes")}
-                                handleClick={() => navigate(`/recipes/${recipe.recipeId}/edit`)}
+                                onClick={() => navigate(`/recipes/${recipe.recipeId}/edit`)}
                             >
 
                             </Button>
@@ -135,9 +147,8 @@ function Recipes() {
                             <Button
                                 btnColor="gray-outline"
                                 text="Delete"
-                                handleClick={() => handleDeleteRecipe(recipe.id)}
+                                onClick={() => handleDeleteRecipe(recipe.recipeId)}
                             >
-                                Delete
                             </Button>
                         </td>
 
@@ -146,20 +157,21 @@ function Recipes() {
                     {recipes.length === 0 && (
                         <tr>
                         <td colSpan="5">
-                        No recipes found.
+                            <MessageLabel variant="info">
+                                No recipes found.
+                            </MessageLabel>
                         </td>
                         </tr>
                         )}
                     </tbody>
                 </table>
 
-                <div style={{ textAlign: "right", marginTop: "16px" }}>
+                <div className="recipes-actions">
                     <Button
-                        // to="/add_recipes"
                         text="Add Recipe"
                         btnColor="green-filled"
                         buttonType="button"
-                        handleClick={() => navigate("/add_recipes")}
+                        onClick={() => navigate("/add_recipes")}
                     >
                     </Button>
                 </div>

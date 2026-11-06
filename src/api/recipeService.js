@@ -1,12 +1,9 @@
 import axiosInstance from "./axiosInstance";
-import axios from "axios";
-
 
 export const getAllRecipes = async () => {
     const response = await axiosInstance.get(`/recipes`);
     return response;
 };
-
 
 export const getAllRecipesWithAbortSignal = async (signal) => {
     const response = await axiosInstance.get("/recipes", {

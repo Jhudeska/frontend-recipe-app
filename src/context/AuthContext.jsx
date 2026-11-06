@@ -1,5 +1,6 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import {createContext, useContext, useState, useEffect, useCallback} from "react";
 import keycloak from "../helpers/keycloak.js";
+import { getMyUserProfile } from "../api/userProfileService.js";
 
 const AuthContext = createContext(null);
 
@@ -9,9 +10,41 @@ export function AuthProvider({ children }) {
     const [roles, setRoles] = useState([]);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
+    const [profile, setProfile] = useState(null);
+
+
+
+    const loadProfile = useCallback(async () => {
+
+        if (!keycloak.authenticated) {
+            setProfile(null);
+            return;
+        }
+
+        try {
+
+            const response = await getMyUserProfile();
+
+            if (!response?.userId) {
+                throw new Error("Database userId ontbreekt.");
+            }
+
+            setProfile(response);
+
+            console.log("Database profiel:", response);
+            console.log("Database userId:", response?.userId);
+
+        } catch (error) {
+
+            console.error("Profiel ophalen mislukt:", error);
+            setProfile(null);
+
+        }
+
+    }, []);
 
     // Controleer de actuele Keycloak-status
-    function updateAuthState() {
+   const updateAuthState = useCallback(async() => {
 
         const authenticated = keycloak.authenticated ?? false;
 
@@ -32,29 +65,49 @@ export function AuthProvider({ children }) {
 
         setIsAuthenticated(authenticated);
 
-        if (authenticated) {
+        if (authenticated && keycloak.tokenParsed) {
+
+            const token = keycloak.tokenParsed;
+
+            const clientRoles =
+                token.resource_access
+                    ?.["receta-app"]
+                    ?.roles ?? [];
+
 
             setUser({
+                keycloakId: token.sub,
                 username: keycloak.tokenParsed?.preferred_username,
                 email: keycloak.tokenParsed?.email,
                 firstName: keycloak.tokenParsed?.given_name,
                 lastName: keycloak.tokenParsed?.family_name,
             });
 
-            setRoles(
-                keycloak.tokenParsed
-                    ?.resource_access
-                    ?.["receta-app"]
-                    ?.roles ?? []
-            );
-
+            // setRoles(
+            //     keycloak.tokenParsed
+            //         ?.resource_access
+            //         ?.["receta-app"]
+            //         ?.roles ?? []
+            // );
+            setRoles(clientRoles);
+            // setIsAuthenticated(true);
+            try {
+                await loadProfile();
+            } catch (error) {
+                console.error("Profiel laden mislukt:", error);
+            }
+            loadProfile();
         } else {
 
             setUser(null);
+            setProfile(null);
             setRoles([]);
+            // setIsAuthenticated(false);
 
         }
-    }
+    }, [loadProfile]);
+
+
 
     // Keycloak initialisatie is al uitgevoerd in main.jsx
     useEffect(() => {
@@ -66,6 +119,7 @@ export function AuthProvider({ children }) {
         keycloak.onAuthSuccess = updateAuthState;
         keycloak.onAuthLogout = updateAuthState;
         keycloak.onAuthRefreshSuccess = updateAuthState;
+        keycloak.onAuthRefreshError = updateAuthState;
 
         // Keycloak is al geïnitialiseerd
         setIsLoading(false);
@@ -74,22 +128,49 @@ export function AuthProvider({ children }) {
             keycloak.onAuthSuccess = null;
             keycloak.onAuthLogout = null;
             keycloak.onAuthRefreshSuccess = null;
+            keycloak.onAuthRefreshError = null;
         };
 
-    }, []);
+    }, [updateAuthState]);
 
 
-    // Controleer één rol
-    const hasRole = (role) => {
+    // Controleer één rol.
+    const hasRole = useCallback((role) => {
+
         return roles.includes(role);
-    };
 
-    // Controleer meerdere mogelijke rollen
-    const hasAnyRole = (allowedRoles) => {
+    }, [roles]);
+
+
+    // Controleer meerdere rollen.
+    const hasAnyRole = useCallback((allowedRoles) => {
+
         return allowedRoles.some(role =>
             roles.includes(role)
         );
-    };
+
+    }, [roles]);
+
+    //
+    //
+    // const loadProfile = useCallback(async () => {
+    //     if (!keycloak.authenticated) {
+    //         setProfile(null);
+    //         return;
+    //     }
+    //
+    //     try {
+    //         const response = await getMyUserProfile();
+    //
+    //         setProfile(response);
+    //
+    //         console.log("Database profiel:", response);
+    //
+    //     } catch (error) {
+    //         console.error("Profiel ophalen mislukt:", error);
+    //         setProfile(null);
+    //     }
+    // }, []);
 
 
 
@@ -117,7 +198,8 @@ export function AuthProvider({ children }) {
         try {
             await keycloak.logout({
                 redirectUri: window.location.origin,
-            });
+            })
+
         } catch (error) {
             console.error("Logout failed:", error);
         }
@@ -125,6 +207,7 @@ export function AuthProvider({ children }) {
 
     const value = {
         user,
+        profile,
         roles,
         isAuthenticated,
         isLoading,
@@ -156,21 +239,3 @@ export function useAuth() {
 }
 
 export default AuthContext;
-
-
-// Je houdt verantwoordelijkheden gescheiden:
-//
-//     AppContext: algemene applicatiestatus zoals loading en error.
-//
-//     AuthContext: authenticatiegegevens zoals gebruiker, rollen en inlogstatus.
-//
-//     Dat maakt je applicatie overzichtelijker en makkelijker onderhoudbaar.
-
-
-// Maar onthoud:
-//
-//     AuthContext is het gedeelde communicatiekanaal.
-//
-//     AuthProvider levert de gegevens.
-//
-// useAuth() haalt de gegevens op.

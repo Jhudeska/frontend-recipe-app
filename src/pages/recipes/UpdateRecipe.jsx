@@ -3,15 +3,16 @@ import { useNavigate, useParams } from "react-router-dom";
 import "./UpdateRecipe.css";
 import Button from "../../components/button/Button.jsx";
 
-import { createRecipeImage, uploadRecipeImage } from "../../api/recipeImageService.js";
+import {
+    createRecipeImage,
+    uploadRecipeImage,
+    updateRecipeImage,
+    getAllRecipeImages,} from "../../api/recipeImageService.js";
 import { getAllCategories } from "../../api/categoryService.js";
 import {
     getAllIngredients,
     createIngredient,
 } from "../../api/ingredientService.js";
-
-// Koppel deze functies aan de juiste bestaande API-functies
-// voor het ophalen en updaten van een recept.
 import {
     getRecipeById,
     updateRecipe,
@@ -40,6 +41,8 @@ function UpdateRecipe() {
     const [imageUrl, setImageUrl] = useState("");
     const [imagePreview, setImagePreview] = useState(null);
     const [existingImageUrl, setExistingImageUrl] = useState("");
+    const [existingImageId, setExistingImageId] = useState(null);
+    // const [recipeImageId, setRecipeImageId] = useState(null);
 
     const [newIngredient, setNewIngredient] = useState("");
 
@@ -48,6 +51,7 @@ function UpdateRecipe() {
     const [categoriesLoading, setCategoriesLoading] = useState(true);
     const [ingredientsLoading, setIngredientsLoading] = useState(true);
     const [error, setError] = useState("");
+
 
     // Haal categorieën en ingrediënten op.
     useEffect(() => {
@@ -92,13 +96,18 @@ function UpdateRecipe() {
     useEffect(() => {
         let active = true;
 
+
         const fetchRecipe = async () => {
             try {
+                // Bestaand recept ophalen
                 const response = await getRecipeById(id);
                 const recipe = response.data;
 
                 if (!active) return;
 
+                console.log("Volledige recept response:", recipe);
+
+                // Receptvelden invullen
                 setFormData({
                     title: recipe.title ?? "",
                     description: recipe.description ?? "",
@@ -108,34 +117,69 @@ function UpdateRecipe() {
                     categoryId: recipe.categoryId ?? "",
                 });
 
-                // Pas deze property aan als jouw API een andere
-                // propertynaam gebruikt voor de afbeeldings-URL.
-                const recipeImageUrl =
-                    recipe.imageUrl ??
-                    recipe.image?.imageUrl ??
-                    "";
+                // Bestaande afbeelding ophalen
+                const imageResponse = await getAllRecipeImages();
 
-                setExistingImageUrl(recipeImageUrl);
+                if (!active) return;
 
-                if (recipeImageUrl) {
-                    setImageUrl(recipeImageUrl);
-                    setImagePreview(recipeImageUrl);
+                const recipeImage = imageResponse.data.find(
+                    (image) => image.recipeId === Number(id)
+                );
+
+                if (recipeImage) {
+                    setExistingImageId(recipeImage.recipeImageId);
+                    setExistingImageUrl(recipeImage.imageUrl);
+                    setImageUrl(recipeImage.imageUrl);
+                    setImagePreview(recipeImage.imageUrl);
                     setImageMode("url");
                 }
 
-                // Verwacht dat het recept ingredienten bevat
-                // met een ingredientId.
-                const recipeIngredients = recipe.ingredients ?? [];
-
-                setSelectedIngredients(
-                    recipeIngredients
-                        .map((ingredient) =>
-                            typeof ingredient === "number"
-                                ? ingredient
-                                : ingredient.ingredientId
-                        )
-                        .filter(Number.isInteger)
+                // Bestaande ingrediënten ophalen
+                console.log(
+                    "Ingrediënten uit database:",
+                    recipe.ingredients
                 );
+
+                console.log(
+                    "RecipeIngredients:",
+                    recipe.recipeIngredients
+                );
+
+                const recipeIngredients =
+                    recipe.ingredients ??
+                    recipe.recipeIngredients ??
+                    [];
+
+                // Ingrediëntgegevens omzetten
+                const mappedIngredients = recipeIngredients.map((item) => ({
+                    ingredientId: Number(
+                        item.ingredientId ??
+                        item.ingredient?.ingredientId
+                    ),
+
+                    quantity:
+                        item.quantity ??
+                        item.recipeIngredient?.quantity ??
+                        "",
+
+                    unit:
+                        item.unit ??
+                        item.recipeIngredient?.unit ??
+                        "",
+                }));
+
+                console.log(
+                    "Gemapte ingrediënten:",
+                    mappedIngredients
+                );
+
+                // Ingrediënten en hoeveelheden in de state plaatsen
+                setSelectedIngredients(
+                    mappedIngredients.filter(
+                        (item) => Number.isInteger(item.ingredientId)
+                    )
+                );
+
             } catch (err) {
                 console.error("Error fetching recipe:", err);
 
@@ -207,10 +251,14 @@ function UpdateRecipe() {
         );
     };
 
+
     const handleCreateIngredient = async () => {
         const name = newIngredient.trim();
 
-        if (!name) return;
+        if (!name) {
+            setError("Vul een ingrediëntnaam in.");
+            return;
+        }
 
         const existingIngredient = ingredients.find(
             (ingredient) =>
@@ -218,13 +266,26 @@ function UpdateRecipe() {
         );
 
         if (existingIngredient) {
-            setSelectedIngredients((previous) =>
-                previous.includes(existingIngredient.ingredientId)
-                    ? previous
-                    : [...previous, existingIngredient.ingredientId]
-            );
+            setSelectedIngredients((previous) => {
+                const alreadySelected = previous.some(
+                    (item) =>
+                        item.ingredientId === existingIngredient.ingredientId
+                );
+
+                if (alreadySelected) return previous;
+
+                return [
+                    ...previous,
+                    {
+                        ingredientId: existingIngredient.ingredientId,
+                        quantity: "",
+                        unit: "",
+                    },
+                ];
+            });
 
             setNewIngredient("");
+            setError("");
             return;
         }
 
@@ -239,16 +300,21 @@ function UpdateRecipe() {
 
             setSelectedIngredients((previous) => [
                 ...previous,
-                createdIngredient.ingredientId,
+                {
+                    ingredientId: createdIngredient.ingredientId,
+                    quantity: "",
+                    unit: "",
+                },
             ]);
 
             setNewIngredient("");
             setError("");
+
         } catch (err) {
             console.error("Error creating ingredient:", err);
 
             setError(
-                err.response?.data?.message ??
+                err.response?.data?.message ||
                 "Het ingrediënt kon niet worden toegevoegd."
             );
         }
@@ -265,13 +331,23 @@ function UpdateRecipe() {
         }
 
         const recipe = {
-            title: formData.title.trim(),
-            description: formData.description.trim(),
-            instructions: formData.instructions.trim(),
-            preparationTime: Number(formData.preparationTime),
-            servings: Number(formData.servings),
+            recipe: {
+                title: formData.title.trim(),
+                description: formData.description.trim(),
+                instructions: formData.instructions.trim(),
+                preparationTime: Number(formData.preparationTime),
+                servings: Number(formData.servings),
+            },
+
             categoryId: Number(formData.categoryId),
+
+            ingredients: selectedIngredients.map((ingredient) => ({
+                ingredientId: ingredient.ingredientId,
+                quantity: Number(ingredient.quantity),
+                unit: ingredient.unit.trim(),
+            })),
         };
+
 
         if (
             !recipe.title ||
@@ -284,6 +360,20 @@ function UpdateRecipe() {
             recipe.categoryId <= 0
         ) {
             setError("Controleer de verplichte velden.");
+            return;
+        }
+
+        const invalidIngredient = recipe.ingredients.some(
+            (ingredient) =>
+                !Number.isFinite(ingredient.quantity) ||
+                ingredient.quantity <= 0 ||
+                !ingredient.unit
+        );
+
+        if (invalidIngredient) {
+            setError(
+                "Controleer de hoeveelheden en eenheden van je ingrediënten."
+            );
             return;
         }
 
@@ -302,13 +392,21 @@ function UpdateRecipe() {
                 imageUrl.trim() &&
                 imageUrl.trim() !== existingImageUrl
             ) {
-                await createRecipeImage({
-                    imageUrl: imageUrl.trim(),
-                    recipeId: Number(id),
-                });
+                if (existingImageId) {
+                    await updateRecipeImage(existingImageId, {
+                        imageUrl: imageUrl.trim(),
+                        recipeId: Number(id),
+                    });
+                } else {
+                    await createRecipeImage({
+                        imageUrl: imageUrl.trim(),
+                        recipeId: Number(id),
+                    });
+                }
             }
-
             navigate("/recipes");
+
+
         } catch (err) {
             console.error("Fout bij updaten:", err);
 
@@ -331,6 +429,48 @@ function UpdateRecipe() {
             </section>
         );
     }
+
+    const handleIngredientsChange = (event) => {
+        const selectedIds = Array.from(
+            event.target.selectedOptions,
+            (option) => Number(option.value)
+        );
+
+        setSelectedIngredients((previous) => {
+            return selectedIds.map((id) => {
+                const existing = previous.find(
+                    (ingredient) => ingredient.ingredientId === id
+                );
+
+                return existing || {
+                    ingredientId: id,
+                    quantity: "",
+                    unit: "",
+                };
+            });
+        });
+    };
+
+    // Hoeveelheid en eenheid van een ingrediënt aanpassen
+    const handleIngredientChange = (ingredientId, field, value) => {
+        setSelectedIngredients((previous) =>
+            previous.map((ingredient) =>
+                ingredient.ingredientId === ingredientId
+                    ? {
+                        ...ingredient,
+                        [field]: value,
+                    }
+                    : ingredient
+            )
+        );
+    };
+
+    // {selectedIngredients.map((selected) => {
+    //     const ingredient = ingredients.find(
+    //         (item) =>
+    //             item.ingredientId === selected.ingredientId
+    //     );
+    // })}
 
     return (
         <section className="outer-container page-container">
@@ -472,61 +612,123 @@ function UpdateRecipe() {
                         )}
                     </div>
 
-                    {/*<div className="ingredient-section">*/}
-                    {/*    <label htmlFor="ingredients">*/}
-                    {/*        Ingredients*/}
-                    {/*    </label>*/}
 
-                    {/*    <select*/}
-                    {/*        className="field ingredient-select"*/}
-                    {/*        id="ingredients"*/}
-                    {/*        multiple*/}
-                    {/*        value={selectedIngredients.map(String)}*/}
-                    {/*        onChange={(event) => {*/}
-                    {/*            const selectedIds = Array.from(*/}
-                    {/*                event.target.selectedOptions,*/}
-                    {/*                (option) => Number(option.value)*/}
-                    {/*            );*/}
+                    <div className="ingredient-section">
 
-                    {/*            setSelectedIngredients(selectedIds);*/}
-                    {/*        }}*/}
-                    {/*        disabled={ingredientsLoading}*/}
-                    {/*        size={5}*/}
-                    {/*    >*/}
-                    {/*        {ingredients.map((ingredient) => (*/}
-                    {/*            <option*/}
-                    {/*                key={ingredient.ingredientId}*/}
-                    {/*                value={ingredient.ingredientId}*/}
-                    {/*            >*/}
-                    {/*                {ingredient.name}*/}
-                    {/*            </option>*/}
-                    {/*        ))}*/}
-                    {/*    </select>*/}
+                        <label htmlFor="ingredients">
+                            Ingredients
+                        </label>
 
-                    {/*    <div className="add-ingredient">*/}
-                    {/*        <input*/}
-                    {/*            className="field"*/}
-                    {/*            type="text"*/}
-                    {/*            placeholder="New ingredient"*/}
-                    {/*            value={newIngredient}*/}
-                    {/*            onChange={(event) =>*/}
-                    {/*                setNewIngredient(event.target.value)*/}
-                    {/*            }*/}
-                    {/*        />*/}
+                        <select
+                            className="field ingredient-select"
+                            id="ingredients"
+                            multiple
+                            value={selectedIngredients.map((item) =>
+                                String(item.ingredientId)
+                            )}
+                            onChange={handleIngredientsChange}
+                            disabled={ingredientsLoading}
+                            size={5}
+                        >
+                            {ingredients.map((ingredient) => (
+                                <option
+                                    key={ingredient.ingredientId}
+                                    value={ingredient.ingredientId}
+                                >
+                                    {ingredient.name}
+                                </option>
+                            ))}
+                        </select>
 
-                    {/*        <Button*/}
-                    {/*            text="Add"*/}
-                    {/*            buttonType="button"*/}
-                    {/*            btnColor="green-filled"*/}
-                    {/*            onClick={handleCreateIngredient}*/}
-                    {/*        />*/}
-                    {/*    </div>*/}
+                        <small>
+                            Use Ctrl (Windows) or Cmd (Mac) to select multiple ingredients.
+                        </small>
 
-                    {/*    <small>*/}
-                    {/*        Use Ctrl (Windows) or Cmd (Mac) to select*/}
-                    {/*        multiple ingredients.*/}
-                    {/*    </small>*/}
-                    {/*</div>*/}
+                        {selectedIngredients.length > 0 && (
+                            <div className="selected-ingredients">
+
+                                <h4>Selected ingredients</h4>
+
+                                {selectedIngredients.map((selected) => {
+
+                                    const ingredient = ingredients.find(
+                                        (item) =>
+                                            item.ingredientId === selected.ingredientId
+                                    );
+
+                                    return (
+                                        <div
+                                            className="selected-ingredient"
+                                            key={selected.ingredientId}
+                                        >
+
+                                            <label>
+                                                {ingredient?.name ?? "Unknown ingredient"}
+                                            </label>
+
+
+                                            <input
+                                                className="field"
+                                                type="number"
+                                                min="0.001"
+                                                step="0.001"
+                                                placeholder="Quantity"
+                                                value={selected.quantity}
+                                                onChange={(event) =>
+                                                    handleIngredientChange(
+                                                        selected.ingredientId,
+                                                        "quantity",
+                                                        event.target.value
+                                                    )
+                                                }
+                                            />
+
+                                            <input
+                                                className="field"
+                                                type="text"
+                                                maxLength={50}
+                                                placeholder="Unit (e.g. gram)"
+                                                value={selected.unit}
+                                                onChange={(event) =>
+                                                    handleIngredientChange(
+                                                        selected.ingredientId,
+                                                        "unit",
+                                                        event.target.value
+                                                    )
+                                                }
+                                            />
+
+                                        </div>
+                                    );
+                                })}
+
+                            </div>
+                        )}
+
+                        <div className="add-ingredient">
+
+                            <input
+                                className="field"
+                                type="text"
+                                placeholder="New ingredient"
+                                value={newIngredient}
+                                onChange={(event) =>
+                                    setNewIngredient(event.target.value)
+                                }
+                            />
+
+                            <Button
+                                text="Add"
+                                buttonType="button"
+                                btnColor="green-filled"
+                                onClick={handleCreateIngredient}
+                            />
+
+                        </div>
+
+                    </div>
+
+
 
                     <input
                         className="field"
@@ -580,6 +782,7 @@ function UpdateRecipe() {
                             buttonType="submit"
                             btnColor="green-filled"
                             disabled={saving}
+                            onClick={handleSubmit}
                         />
                     </div>
                 </form>

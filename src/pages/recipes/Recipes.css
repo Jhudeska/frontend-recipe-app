@@ -29,6 +29,11 @@ tr {
     display: block;
     margin-top: 5px;
 }
+.recipes-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 16px;
+}
 
 @media (max-width: 768px) {
     .data {

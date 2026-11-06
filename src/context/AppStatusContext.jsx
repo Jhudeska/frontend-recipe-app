@@ -1,6 +1,6 @@
 import { createContext, useContext, useState } from "react";
 
-const AppContext = createContext(null);
+const AppStatusContext = createContext(null);
 
 export function AppProvider({ children }) {
     const [loading, setLoading] = useState(false);
@@ -19,14 +19,14 @@ export function AppProvider({ children }) {
     };
 
     return (
-        <AppContext.Provider value={value}>
+        <AppStatusContext.Provider value={value}>
             {children}
-        </AppContext.Provider>
+        </AppStatusContext.Provider>
     );
 }
 
 export function useAppContext() {
-    const context = useContext(AppContext);
+    const context = useContext(AppStatusContext);
 
     if (context === null) {
         throw new Error(

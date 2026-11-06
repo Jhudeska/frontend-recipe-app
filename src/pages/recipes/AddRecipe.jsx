@@ -1,17 +1,12 @@
-import {useEffect, useRef, useState} from "react";
-import { useNavigate } from "react-router-dom";
 import "./AddRecipe.css";
+import {useEffect, useState} from "react";
+import { useNavigate } from "react-router-dom";
 import Button from "../../components/button/Button.jsx";
 import { createRecipe } from "../../api/recipeService.js";
 import { getAllCategories } from "../../api/categoryService.js";
-import {
-    createRecipeImage,
-    uploadRecipeImage,
-} from "../../api/recipeImageService.js";
-import {
-    getAllIngredients,
-    createIngredient,
-} from "../../api/ingredientService.js";
+import { createRecipeImage, uploadRecipeImage} from "../../api/recipeImageService.js";
+import { getAllIngredients, createIngredient} from "../../api/ingredientService.js";
+import {useAppContext} from "../../context/AppStatusContext.jsx";
 
 function AddRecipe() {
     const navigate = useNavigate();
@@ -25,9 +20,10 @@ function AddRecipe() {
     const [categories, setCategories] = useState([]);
     const [imagePreview, setImagePreview] = useState(null);
     const [categoriesLoading, setCategoriesLoading] = useState(true);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("");
     const [selectedIngredients, setSelectedIngredients] = useState([]);
+
+    const {loading, setLoading, error, setError, clearError } = useAppContext();
+
 
     const [formData, setFormData] = useState({
         title: "",
@@ -42,9 +38,12 @@ function AddRecipe() {
         const fetchIngredients = async () => {
             try {
                 const response = await getAllIngredients();
+
                 setIngredients(response.data);
-            } catch (err) {
-                console.error("Error fetching ingredients:", err);
+
+            } catch (error) {
+                console.error("Error fetching ingredients:", error);
+
                 setError("De ingrediënten konden niet worden opgehaald.");
             } finally {
                 setIngredientsLoading(false);
@@ -61,13 +60,16 @@ function AddRecipe() {
 
         const fetchCategories = async () => {
             try {
+                setLoading(true);
+                clearError();
+
                 const response = await getAllCategories();
 
                 if (active) {
                     setCategories(response.data);
                 }
-            } catch (err) {
-                console.error("Error fetching categories:", err);
+            } catch (error) {
+                console.error("Error fetching categories:", error);
 
                 if (active) {
                     setError("De categorieën konden niet worden opgehaald.");
@@ -115,33 +117,51 @@ function AddRecipe() {
     };
 
 
-
     const handleSubmit = async (event) => {
         event.preventDefault();
         setError("");
 
         const recipe = {
-            title: formData.title.trim(),
-            description: formData.description.trim(),
-            instructions: formData.instructions.trim(),
-            preparationTime: Number(formData.preparationTime),
-            servings: Number(formData.servings),
+            recipe: {
+                title: formData.title.trim(),
+                description: formData.description.trim(),
+                instructions: formData.instructions.trim(),
+                preparationTime: Number(formData.preparationTime),
+                servings: Number(formData.servings),
+            },
             categoryId: Number(formData.categoryId),
+            ingredients: selectedIngredients.map((ingredient) => ({
+                ingredientId: ingredient.ingredientId,
+                quantity: Number(ingredient.quantity),
+                unit: ingredient.unit.trim(),
+            })),
         };
 
-
-
         if (
-            !recipe.title ||
-            !recipe.instructions ||
-            !Number.isInteger(recipe.preparationTime) ||
-            recipe.preparationTime <= 0 ||
-            !Number.isInteger(recipe.servings) ||
-            recipe.servings <= 0 ||
+            !recipe.recipe.title ||
+            !recipe.recipe.instructions ||
+            !Number.isInteger(recipe.recipe.preparationTime) ||
+            recipe.recipe.preparationTime <= 0 ||
+            !Number.isInteger(recipe.recipe.servings) ||
+            recipe.recipe.servings <= 0 ||
             !Number.isInteger(recipe.categoryId) ||
             recipe.categoryId <= 0
         ) {
             setError("Controleer de verplichte velden.");
+            return;
+        }
+
+        const invalidIngredient = recipe.ingredients.some(
+            (ingredient) =>
+                !Number.isFinite(ingredient.quantity) ||
+                ingredient.quantity <= 0 ||
+                !ingredient.unit
+        );
+
+        if (invalidIngredient) {
+            setError(
+                "Controleer de hoeveelheden en eenheden van je ingrediënten."
+            );
             return;
         }
 
@@ -159,12 +179,11 @@ function AddRecipe() {
 
         try {
             const response = await createRecipe(recipe);
+
             const recipeId = response.data.recipeId;
 
             if (!recipeId) {
-                throw new Error(
-                    "Het recept is aangemaakt, maar het recept-ID ontbreekt in de response."
-                );
+                throw new Error("Recept-ID ontbreekt in de response.");
             }
 
             if (imageMode === "upload") {
@@ -177,14 +196,16 @@ function AddRecipe() {
             }
 
             navigate("/recipes");
+
         } catch (err) {
             console.error("Error creating recipe:", err);
 
             setError(
                 err.response?.data?.message ||
                 err.message ||
-                "Het recept of de afbeelding kon niet worden opgeslagen."
+                "Het recept kon niet worden opgeslagen."
             );
+
         } finally {
             setLoading(false);
         }
@@ -201,32 +222,78 @@ function AddRecipe() {
 
 
 
-    const handleIngredientToggle = (ingredientId) => {
+    const handleIngredientsChange = (event) => {
+        const selectedIds = Array.from(
+            event.target.selectedOptions,
+            (option) => Number(option.value)
+        );
+
+        setSelectedIngredients((previous) => {
+            return selectedIds.map((id) => {
+                // Bestaande hoeveelheid en eenheid behouden
+                const existing = previous.find(
+                    (ingredient) => ingredient.ingredientId === id
+                );
+
+                return existing || {
+                    ingredientId: id,
+                    quantity: "",
+                    unit: ""
+                };
+            });
+        });
+    };
+
+    //functie voor hoeveelheid en eenheid
+    const handleIngredientChange = (ingredientId, field, value) => {
         setSelectedIngredients((previous) =>
-            previous.includes(ingredientId)
-                ? previous.filter((id) => id !== ingredientId)
-                : [...previous, ingredientId]
+            previous.map((ingredient) =>
+                ingredient.ingredientId === ingredientId
+                    ? {
+                        ...ingredient,
+                        [field]: value
+                    }
+                    : ingredient
+            )
         );
     };
+
 
     const handleCreateIngredient = async () => {
         const name = newIngredient.trim();
 
-        if (!name) return;
+        if (!name) {
+            setError("Vul een ingrediëntnaam in.");
+            return;
+        }
 
+        // Controleren of het ingrediënt al bestaat
         const existingIngredient = ingredients.find(
             (ingredient) =>
                 ingredient.name.toLowerCase() === name.toLowerCase()
         );
 
         if (existingIngredient) {
-            setSelectedIngredients((previous) =>
-                previous.includes(existingIngredient.ingredientId)
-                    ? previous
-                    : [...previous, existingIngredient.ingredientId]
-            );
+            setSelectedIngredients((previous) => {
+                const alreadySelected = previous.some(
+                    (item) =>
+                        item.ingredientId === existingIngredient.ingredientId
+                );
+
+                if (alreadySelected) return previous;
+
+                return [
+                    ...previous,
+                    {
+                        ingredientId: existingIngredient.ingredientId,
+                        quantity: "",
+                        unit: ""
+                    }
+                ];
+            });
 
             setNewIngredient("");
+            setError("");
             return;
         }
 
@@ -234,18 +301,25 @@ function AddRecipe() {
             const response = await createIngredient({ name });
             const createdIngredient = response.data;
 
+            // Nieuw ingrediënt toevoegen aan de lijst
             setIngredients((previous) => [
                 ...previous,
-                createdIngredient,
+                createdIngredient
             ]);
 
+            // Nieuw ingrediënt automatisch selecteren
             setSelectedIngredients((previous) => [
                 ...previous,
-                createdIngredient.ingredientId,
+                {
+                    ingredientId: createdIngredient.ingredientId,
+                    quantity: "",
+                    unit: ""
+                }
             ]);
 
             setNewIngredient("");
             setError("");
+
         } catch (err) {
             console.error("Error creating ingredient:", err);
 
@@ -255,6 +329,8 @@ function AddRecipe() {
             );
         }
     };
+
+
 
 
     return (
@@ -272,20 +348,6 @@ function AddRecipe() {
                         onChange={handleChange}
                         required
                     />
-
-                    {/*<input*/}
-                    {/*    className="field"*/}
-                    {/*    name="category"*/}
-                    {/*    type="category"*/}
-                    {/*    placeholder="Category"*/}
-                    {/*    value={formData.category}*/}
-                    {/*    onChange={handleChange}*/}
-                    {/*    required*/}
-                    {/*/>*/}
-
-                    {/*<option key={category.id} value={category.id}>*/}
-                    {/*    {category.name}*/}
-                    {/*</option>*/}
 
                     <select
                         className="field"
@@ -310,33 +372,6 @@ function AddRecipe() {
                     </select>
 
 
-
-
-                    <div className="image-upload">
-                    {/*<input*/}
-                    {/*    ref={fileInputRef}*/}
-                    {/*    type="file"*/}
-                    {/*    accept="image/*"*/}
-                    {/*    name="image"*/}
-                    {/*    placeholder="Image"*/}
-                    {/*    onChange={handleImageChange}*/}
-                    {/*    hidden*/}
-                    {/*/>*/}
-
-                    {/*<button*/}
-                    {/*    type="button"*/}
-                    {/*    className="upload-button"*/}
-                    {/*    onClick={() => fileInputRef.current.click()}*/}
-                    {/*>*/}
-                    {/*    Upload image*/}
-                    {/*</button>*/}
-                    {/*    {imagePreview && (*/}
-                    {/*        <img*/}
-                    {/*            src={imagePreview}*/}
-                    {/*            alt="Preview"*/}
-                    {/*            className="image-preview"*/}
-                    {/*        />*/}
-                    {/*    )}*/}
 
                         <div className="image-upload">
                             <label>Recipe image</label>
@@ -418,65 +453,121 @@ function AddRecipe() {
                                 </>
                             )}
                         </div>
+
+
+                    <div className="ingredient-section">
+
+                        <label htmlFor="ingredients">
+                            Ingredients
+                        </label>
+
+                        <select
+                            className="field ingredient-select"
+                            id="ingredients"
+                            multiple
+                            value={selectedIngredients.map((item) =>
+                                String(item.ingredientId)
+                            )}
+                            onChange={handleIngredientsChange}
+                            disabled={ingredientsLoading}
+                            size={5}
+                        >
+                            {ingredients.map((ingredient) => (
+                                <option
+                                    key={ingredient.ingredientId}
+                                    value={ingredient.ingredientId}
+                                >
+                                    {ingredient.name}
+                                </option>
+                            ))}
+                        </select>
+
+                        <small>
+                            Use Ctrl (Windows) or Cmd (Mac) to select multiple ingredients.
+                        </small>
+
+                        {/* Hoeveelheden en eenheden */}
+                        {selectedIngredients.length > 0 && (
+                            <div className="selected-ingredients">
+
+                                <h4>Selected ingredients</h4>
+
+                                {selectedIngredients.map((selected) => {
+                                    const ingredient = ingredients.find(
+                                        (item) =>
+                                            item.ingredientId === selected.ingredientId
+                                    );
+
+                                    return (
+                                        <div
+                                            className="selected-ingredient"
+                                            key={selected.ingredientId}
+                                        >
+                                            <label>
+                                                {ingredient?.name}
+                                            </label>
+
+                                            <input
+                                                className="field"
+                                                type="number"
+                                                min="0.001"
+                                                step="0.001"
+                                                placeholder="Quantity"
+                                                value={selected.quantity}
+                                                onChange={(event) =>
+                                                    handleIngredientChange(
+                                                        selected.ingredientId,
+                                                        "quantity",
+                                                        event.target.value
+                                                    )
+                                                }
+                                            />
+
+                                            <input
+                                                className="field"
+                                                type="text"
+                                                maxLength={50}
+                                                placeholder="Unit (e.g. gram)"
+                                                value={selected.unit}
+                                                onChange={(event) =>
+                                                    handleIngredientChange(
+                                                        selected.ingredientId,
+                                                        "unit",
+                                                        event.target.value
+                                                    )
+                                                }
+                                            />
+                                        </div>
+                                    );
+                                })}
+
+                            </div>
+                        )}
+
+                        {/* Nieuw ingrediënt toevoegen */}
+                        <div className="add-ingredient">
+
+                            <input
+                                className="field"
+                                type="text"
+                                placeholder="New ingredient"
+                                value={newIngredient}
+                                onChange={(event) =>
+                                    setNewIngredient(event.target.value)
+                                }
+                            />
+
+
+                            <Button
+                                text="Add"
+                                buttonType="button"
+                                btnColor="green-filled"
+                                onClick={handleCreateIngredient}
+                            />
+
+                        </div>
+
                     </div>
-
-                    {/*<input*/}
-                    {/*    className="field"*/}
-                    {/*    name="ingredients"*/}
-                    {/*    type="text"*/}
-                    {/*    placeholder="Ingredients"*/}
-                    {/*    value={formData.ingredients}*/}
-                    {/*    onChange={handleChange}*/}
-                    {/*/>*/}
-
-                    {/*<div className="ingredient-section">*/}
-                    {/*    <label htmlFor="ingredients">Ingredients</label>*/}
-
-                    {/*    <select*/}
-                    {/*        className="field ingredient-select"*/}
-                    {/*        id="ingredients"*/}
-                    {/*        multiple*/}
-                    {/*        value={selectedIngredients.map(String)}*/}
-                    {/*        onChange={(event) => {*/}
-                    {/*            const selectedIds = Array.from(*/}
-                    {/*                event.target.selectedOptions,*/}
-                    {/*                (option) => Number(option.value)*/}
-                    {/*            );*/}
-
-                    {/*            setSelectedIngredients(selectedIds);*/}
-                    {/*        }}*/}
-                    {/*        disabled={ingredientsLoading}*/}
-                    {/*        size={5}*/}
-                    {/*    >*/}
-                    {/*        {ingredients.map((ingredient) => (*/}
-                    {/*            <option*/}
-                    {/*                key={ingredient.ingredientId}*/}
-                    {/*                value={ingredient.ingredientId}*/}
-                    {/*            >*/}
-                    {/*                {ingredient.name}*/}
-                    {/*            </option>*/}
-                    {/*        ))}*/}
-                    {/*    </select>*/}
-
-                    {/*    <div className="add-ingredient">*/}
-                    {/*        <input*/}
-                    {/*            className="field"*/}
-                    {/*            type="text"*/}
-                    {/*            placeholder="New ingredient"*/}
-                    {/*            value={newIngredient}*/}
-                    {/*            onChange={(event) => setNewIngredient(event.target.value)}*/}
-                    {/*        />*/}
-
-                    {/*        <Button*/}
-                    {/*            text="Add"*/}
-                    {/*            buttonType="button"*/}
-                    {/*            btnColor="green-filled"*/}
-                    {/*            onClick={handleCreateIngredient}*/}
-                    {/*        />*/}
-                    {/*    </div>*/}
-
-                    {/*    <small>Use Ctrl (Windows) or Cmd (Mac) to select multiple ingredients.</small>*/}
-                    {/*</div>*/}
 
                     <input
                         className="field"
@@ -517,18 +608,14 @@ function AddRecipe() {
                         onChange={handleChange}
                     />
 
-                    {/*<input*/}
-                    {/*    className="field"*/}
-                    {/*    name="servings"*/}
-                    {/*    type="number"*/}
-                    {/*    min="1"*/}
-                    {/*    placeholder="Number of servings"*/}
-                    {/*    value={formData.servings}*/}
-                    {/*    onChange={handleChange}*/}
-                    {/*    required*/}
-                    {/*/>*/}
                     <div className="navigate-buttons">
-                        <Button text="Cancel" buttonType="button" btnColor="green-filled"></Button>
+                        <Button
+                            text="Cancel"
+                            buttonType="button"
+                            btnColor="green-filled"
+                            onClick={() => navigate("/recipes")}
+                        >
+                        </Button>
                         <Button text="Save"   buttonType="submit" btnColor="green-filled"></Button>
                     </div>
                 </form>
