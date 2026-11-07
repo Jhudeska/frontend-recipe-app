@@ -13,8 +13,6 @@
   <img src="src/assets/tiramisu.png" alt="Recipe Application Banner" height="240" width="100%">
 </p>
 
-
-
 <!-- TOC -->
 * [Inhoudsopgave](#inhoudsopgave)
   * [1. Inleiding](#1-inleiding)
@@ -59,15 +57,16 @@
 
 ## 1. Inleiding
 
-De Recipe Application is een fullstack webapplicatie waarmee gebruikers recepten kunnen bekijken, beheren, beoordelen en bewaren.
+De Recipe Application is een `fullstack` webapplicatie waarmee gebruikers recepten kunnen bekijken, beheren, beoordelen en bewaren.
 
-Het doel van de applicatie is om het gebruik van losse papieren recepten te verminderen. Recepten die op papier worden bewaard, kunnen gemakkelijk kwijtraken of onoverzichtelijk worden.
+Het doel van de applicatie is om het gebruik van `losse papieren recepten te verminderen`. Recepten die op papier worden bewaard, kunnen gemakkelijk kwijtraken of onoverzichtelijk worden.
 
-De web-API biedt daarom één centrale en overzichtelijke omgeving waarin gebruikers, zoals chefs, hun recepten digitaal kunnen opslaan, bekijken en beheren. Daarnaast kunnen gebruikers recepten beoordelen, een favorietenlijst bijhouden en eventueel hun eigen digitale kookboek samenstellen.
+De `web-API` biedt daarom `één centrale en overzichtelijke omgeving waarin gebruikers`, zoals chefs, hun `recepten` digitaal kunnen opslaan, bekijken en beheren. Daarnaast kunnen gebruikers recepten beoordelen, een favorietenlijst bijhouden en eventueel hun `eigen digitale kookboek samenstellen`.
 
 
-De applicatie bestaat uit drie onderdelen:
+De applicatie bestaat uit vier onderdelen:
 
+- **Keycloak:** Secure Identity and Access Management (OIDC) server voor authenticatie en autorisatie.
 - **Frontend:** React en JavaScript.
 - **Backend:** Java en Spring Boot.
 - **Database:** PostgreSQL.
@@ -84,7 +83,7 @@ De applicatie bestaat uit drie onderdelen:
 `Alle recepten centraal bewaren` i.p.v. losse papieren
 
 Dit doe ik door een `webAPI te bouwen` die één overzichtelijke en centrale omgeving te creëren waarin alle recepten digitaal worden opgeslagen. Hierdoor raken recepten niet meer kwijt en worden ze beter georganiseerd dan wanneer ze op papier staan.
-Tevens kan de gebruikers (chef) en admin een receptenboek maken en delen met anderen.
+Tevens kan de `gebruikers (chef)` en `admin` een receptenboek maken en delen met anderen.
 
 
 
@@ -99,17 +98,19 @@ Tevens kan de gebruikers (chef) en admin een receptenboek maken en delen met and
 
 ## 2. Benodigde software
 
-| Software | Doel |
-|---|---|
-| Git | Broncode ophalen en beheren |
-| IntelliJ IDEA | Backend ontwikkelen en uitvoeren |
-| WebStorm | Frontend ontwikkelen en uitvoeren |
-| Java JDK 25 | Backend runtime |
-| Node.js | Frontend runtime |
-| npm | Frontend dependencies |
-| PostgreSQL | Relationele database |
-| pgAdmin 4 | Databasebeheer |
-| Postman | REST API testen |
+| Software      | Doel                                                                           |
+|---------------|--------------------------------------------------------------------------------|
+| Git           | Broncode ophalen en beheren                                                    |
+| IntelliJ IDEA | Backend ontwikkelen en uitvoeren                                               |
+| WebStorm      | Frontend ontwikkelen en uitvoeren                                              |
+| Java JDK 25   | Backend runtime                                                                |
+| Node.js       | Frontend runtime                                                               |
+| npm           | Frontend dependencies                                                          |
+| Vite          | Frontend buildtool en development server                                       |
+| PostgreSQL    | Relationele database                                                           |
+| pgAdmin 4     | Databasebeheer                                                                 |
+| Postman       | REST API testen                                                                |
+| Keycloack     | Identiteits- en toegangsbeheer, bijvoorbeeld voor authenticatie en autorisatie |
 
 ### 2.1 Runtime environments
 
@@ -126,6 +127,10 @@ Tevens kan de gebruikers (chef) en admin een receptenboek maken en delen met and
 - Vite 8.3.0
 - Node.js 20.19+ of 22.12+
 - npm
+
+**Security**
+- Keycloak 26.7.4
+- Spring Security OAuth2 Resource Server
 
 Controleer de versies:
 
@@ -181,29 +186,75 @@ git clone https://github.com/Jhudeska/frontend-recipe-app.git
 [//]: # (```)
 ### Projectstructuur
 
-<details>
-<summary>📁 RecipeApplication</summary>
-<details>
-<summary>📁 backend-recipe-app</summary>
-
-- 📄 `index.js`
-- 📁 `components`
-  - 📄 `Header.js`
-  - 📄 `Footer.js`
-
-</details>
 
 <details>
 <summary>📁 backend-recipe-app</summary>
 
-- 📄 `index.js`
-- 📁 `components`
-  - 📄 `Header.js`
-  - 📄 `Footer.js`
+
+- 📁 `recipeapp`
+  -  `.mvn`
+  -   `src`
+  -   `main`
+    - `java`
+      -  `nl.novi.recipeapp`
+        -  `config`
+        -  `controllers`
+        -  `dtos`
+        -  `entities`
+        -  `enums`
+        - `exceptions`
+        - `mappers`
+        -  `repositories`
+        -  `security`
+        -  `utils`
+          -  `RecipeappApplication.java`
+    -    `resources`
+      -   `tests`
+        -   `nl.novi.recipeapp`
+          -   `controllers`
+          -   `services`
+            -   `RecipeApplicationTests.java`
+    -   `.gitattributes`
+    -  `.gitignore`
+    -   `mvnw`
+    -   `mvnw.cmd`
+    -   `pom.xml`
+    -   `recipeapp.iml`
+  - 📁 `uploads`
+    - 📁 `recipes`
+      - 📄 `f97eb96c9251.png`
+      - 📄 `f674833c9251.png`
 
 </details>
 
+<details>
+<summary>📁 frontend-recipe-app</summary>
+
+- 📁 `public`
+  -   `src`
+  - `api`
+  - `assets`
+  - `components`
+  - `constants`
+  - `context`
+  - `helpers`
+  - `pages`
+    -  `App.css`
+    -  `App.jsx`
+    -  `index.css`
+    -  `main.jsx`
+  -  `.gitignore`
+  -   `eslint.config.js`
+  -   `index.html`
+  -   `package.json`
+  -   `package-lock.json`
+  -   `postcss.config.js`
+  -   `README.md`
+  -   `receta-logo.svg`
+  -   `vite.config.js`
+
 </details>
+
 
 
 
@@ -215,7 +266,8 @@ git clone https://github.com/Jhudeska/frontend-recipe-app.git
 2. Selecteer Open.
 3. Open de map `backend-recipe-app`.
 4. Wacht totdat Maven de dependencies heeft geladen.
-5. Stel Project SDK in op Java 25.
+5. Stel Project SDK in op Java 25 en configureer Java_HOME.
+
 
 ### 4.2 PostgreSQL installeren
 
@@ -294,6 +346,32 @@ Standaard URL:
 |---|---|
 | Swagger UI | http://localhost:8080/swagger-ui/index.html |
 | OpenAPI JSON | http://localhost:8080/v3/api-docs |
+
+### 4.7 Keycloak configureren
+
+1. Download de laatste versie van Keycloak.
+2. Open cmd of bash.
+3. Start Keyclock met de volgende commando's:
+
+```bash
+cd keycloak-16.1.1/bin
+```
+```bash
+windows: bin\kc.bat start-dev --http-port=9090
+``````bash
+unix: bin/kc.sh start-dev --http-port=9090
+```
+
+4. Stel Paths in op de juiste locaties.
+5. Pas aan in applications.propperties backend.
+
+```properties
+client-id=receta-app
+spring.security.oauth2.resourceserver.jwt.issuer-uri=http://localhost:9090/realms/receta
+spring.security.oauth2.resourceserver.jwt.audience=account
+```
+6.  Keycloak is bereikbaar op http://localhost:9090.
+
 
 ## 5. Frontend installeren en configureren
 
@@ -599,8 +677,8 @@ npm run build
 
 ## 14. Exports
 
-- [postman](https://github.com/Jhudeska/frontend-recipe-app)
-- [keycloack realm ](https://github.com/Jhudeska/frontend-recipe-app)
+- [postman](https://github.com/Jhudeska)
+- [keycloack realm ](https://github.com/Jhudeska)
 
 
 
