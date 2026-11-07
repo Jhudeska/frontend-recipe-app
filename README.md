@@ -358,7 +358,9 @@ cd keycloak-16.1.1/bin
 ```
 ```bash
 windows: bin\kc.bat start-dev --http-port=9090
-``````bash
+```
+
+```bash
 unix: bin/kc.sh start-dev --http-port=9090
 ```
 
