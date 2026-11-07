@@ -27,10 +27,28 @@ export const uploadRecipeImage = async (file, recipeId) => {
         formData,
         {
             headers: {
-                "Content-Type": "multipart/form-data",
+                "Content-Type": undefined,
             },
         }
     );
+};
+
+export const updateRecipeImageUpload = async (id, file) => {
+    const formData = new FormData();
+
+    formData.append("file", file);
+
+    const response = await axiosInstance.put(
+        `/recipe_images/${id}/upload`,
+        formData,
+        {
+            headers: {
+                "Content-Type": undefined,
+            },
+        }
+    );
+
+    return response;
 };
 
 export const updateRecipeImage = async (id, imageData) => {

@@ -1,6 +1,8 @@
 import './RecipeCard.css'
 import {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
+import {useAuth} from "../../context/AuthContext.jsx";
+import { useFavorites } from "../../context/FavoriteContext.jsx";
 
 
 function RecipeCard({
@@ -16,8 +18,15 @@ function RecipeCard({
                         onToggleFavorite
                         }) {
 
+    const { isAuthenticated } = useAuth();
     const [image, setImage] = useState(imageUrl || fallbackImage);
     const [usingFallback, setUsingFallback] = useState(!imageUrl);
+    const {
+        toggleFavorite,
+        isRecipeFavorite
+    } = useFavorites();
+
+    const favorite = isRecipeFavorite(recipeId);
 
     // Reset the image when the recipe or its images change
     useEffect(() => {
@@ -69,13 +78,14 @@ function RecipeCard({
                     </Link>
 
                 </p>
-
+                {isAuthenticated && (
                 <div className="rcard__footer">
                     <span className="stars" aria-label={`Rating: ${score} van 5`}>
                         {Array.from({ length: 5 }, (_, index) =>
                             index < score ? '\u2605' : '\u2606'
                         )}
                     </span>
+
 
                     <button
                         type="button"
@@ -94,7 +104,9 @@ function RecipeCard({
                             />
                         </svg>
                     </button>
+
                 </div>
+                )}
             </div>
         </article>
     );

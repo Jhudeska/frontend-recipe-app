@@ -1,10 +1,5 @@
 import "./MessageLabel.css";
-
-const VARIANTS = {
-    error: "message-label--error",
-    success: "message-label--success",
-    info: "message-label--info",
-};
+import {VARIANTS} from "../../constants/constants.jsx";
 
 function MessageLabel({
                           children,

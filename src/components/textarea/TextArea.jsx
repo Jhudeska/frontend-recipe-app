@@ -1,17 +1,30 @@
-import {useState} from "react";
+import "./TextArea.css"
 
-function TextArea(){
-    const [message, setMessage] = useState("");
+function TextArea({
+                      label,
+                      className,
+                      name,
+                      placeholder,
+                      value,
+                      onChange
+                  }){
+
     return (
-        <textarea
-            className="message-textarea field"
-            name="message"
-            placeholder="Message"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            aria-label="Message"
-            required
-        />
+        <>
+                <label htmlFor={name}>
+                    {label}
+                </label>
+
+                <textarea
+                    id={name}
+                    className={className}
+                    name={name}
+                    placeholder={placeholder}
+                    value={value}
+                    onChange={onChange}
+                />
+        </>
+
     )
 }
 

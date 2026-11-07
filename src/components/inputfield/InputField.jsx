@@ -1,6 +1,7 @@
 import "./InputField.css"
 
-function InputField({label, placeholder, type , onChange, inputColor}) {
+function InputField({label, placeholder, type = "text", name, value , onChange, inputColor , disabled = false}) {
+
 
     if(inputColor === "transparent"){
         inputColor = "transparent";
@@ -10,12 +11,21 @@ function InputField({label, placeholder, type , onChange, inputColor}) {
 
     return (
         <>
-            <label>{label}</label>
+            {label && (
+                <label htmlFor={name}>
+                    {label}
+                </label>
+            )}
+
             <input
+                id={name}
+                name={name}
                 className={inputColor}
                 type={type}
+                value={value ?? ""}
                 onChange={onChange}
                 placeholder={placeholder}
+                disabled={disabled}
             />
 
         </>

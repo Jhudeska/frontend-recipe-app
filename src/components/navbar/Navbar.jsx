@@ -3,12 +3,13 @@ import logo from "../../assets/receta-logo.svg"
 import userBadge from "../../assets/user-regular-full.svg" ;
 import {NavLink, useNavigate} from "react-router-dom";
 import {useState} from "react";
-import keycloak from "../../helpers/keycloak.js";
+import {useAuth} from "../../context/AuthContext.jsx";
 
 
 function Navbar() {
     const [query, setQuery] = useState("");
     const navigate = useNavigate();
+    const { isAuthenticated, isLoading, logout, hasRole } = useAuth();
 
     const handleSearch = (event) => {
         event.preventDefault();
@@ -20,16 +21,6 @@ function Navbar() {
         navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
     };
 
-    async function handleLogout() {
-        try {
-            await keycloak.logout({
-                redirectUri: window.location.origin,
-            });
-        } catch (error) {
-            console.error("Logout failed:", error);
-        }
-    }
-
     return (
         <nav className="navbar">
 
@@ -37,7 +28,7 @@ function Navbar() {
                 <NavLink to="/" className="navbar__logo">
                     <img
                         src={logo}
-                        alt="My Website"
+                        alt="Receta logo"
                     />
                     <span className="navbar__logo-text">Receta</span>
                 </NavLink>
@@ -53,19 +44,14 @@ function Navbar() {
                     Home
                 </NavLink>
 
+                {isAuthenticated && (
                 <NavLink
                     to="/recipes"
                     className="green-outline"
                 >
                     Recipes
                 </NavLink>
-
-                <NavLink
-                    to="/favorites"
-                    className="green-outline"
-                >
-                    Favorites
-                </NavLink>
+                )}
 
                 <NavLink
                     to="/contact"
@@ -74,6 +60,14 @@ function Navbar() {
                     Contact
                 </NavLink>
 
+                {isAuthenticated && (
+                <NavLink
+                    to="/favorites"
+                    className="green-outline"
+                >
+                    Favorites
+                </NavLink>
+                )}
             </section>
 
 
@@ -103,33 +97,51 @@ function Navbar() {
 
                 </form>
 
-                <NavLink
-                    to="/profile"
-                    className="profile-link"
-                >
-                  <img className="user-badge" src={userBadge} alt="Profile" />
-                    Profile
-                </NavLink>
+                {!isLoading && (
+                    isAuthenticated ? (
+                        <>
+                            <NavLink
+                                to="/profile"
+                                className="profile-link"
+                            >
+                                <img className="user-badge" src={userBadge} alt="Profile" />
+                                Profile
+                            </NavLink>
 
-                <NavLink
-                    to="/logout"
-                    className="logout"
-                >
-                    <button className="green-outline" onClick={handleLogout}>
-                        Logout
-                    </button>
-                </NavLink>
+                            {hasRole("ROLE_ADMIN") && (
+                                <NavLink to="/admin" className="green-outline">
+                                Admin
+                                </NavLink>
+                                )}
 
-                {/*<main>*/}
-                {/*    <h1>*/}
-                {/*        Welcome,{" "}*/}
-                {/*        {keycloak.tokenParsed?.preferred_username}*/}
-                {/*    </h1>*/}
+                            <button
+                                type="button"
+                                className="green-outline logout"
+                                onClick={logout}
+                            >
+                                Logout
+                            </button>
+                        </>
+                    ) : (
+                        <>
+                            <NavLink
+                                to="/sign_in"
+                                className="green-outline"
+                            >
+                                Sign in
+                            </NavLink>
+                            <NavLink
+                                to="/sign_in_keycloak"
+                                className="green-outline"
+                            >
+                                Sign in KeyCloak
+                            </NavLink>
+                        </>
 
-                {/*    <button onClick={handleLogout}>*/}
-                {/*        Logout*/}
-                {/*    </button>*/}
-                {/*</main>*/}
+                    )
+                )}
+
+
 
             </section>
 

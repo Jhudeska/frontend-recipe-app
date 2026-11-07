@@ -1,12 +1,5 @@
-
 import { useState, useEffect } from "react";
-
-import {
-    getAllIngredients,
-    createIngredient,
-    updateIngredient,
-    deleteIngredient,
-} from "../../api/ingredientService.js";
+import { getAllIngredients, createIngredient, updateIngredient, deleteIngredient } from "../../api/ingredientService.js";
 
 function AdminIngredient() {
     const [ingredients, setIngredients] = useState([]);

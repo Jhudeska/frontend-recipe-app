@@ -1,11 +1,5 @@
 import { useState, useEffect } from "react";
-
-import {
-    getAllCategories,
-    createCategory,
-    updateCategory,
-    deleteCategory,
-} from "../../api/categoryService.js";
+import { getAllCategories, createCategory, updateCategory, deleteCategory} from "../../api/categoryService.js";
 
 function AdminCategory() {
 

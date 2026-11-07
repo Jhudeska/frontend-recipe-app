@@ -1,12 +1,6 @@
 
 import { useState, useEffect } from "react";
-
-import {
-    getAllRecipeIngredients,
-    createRecipeIngredient,
-    updateRecipeIngredient,
-    deleteRecipeIngredient,
-} from "../../api/recipeIngredientService.js";
+import { getAllRecipeIngredients, createRecipeIngredient, updateRecipeIngredient, deleteRecipeIngredient } from "../../api/recipeIngredientService.js";
 
 function AdminRecipeIngredient() {
     const [recipeIngredients, setRecipeIngredients] = useState([]);

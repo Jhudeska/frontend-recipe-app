@@ -25,3 +25,16 @@ export const deleteUserProfile = async (id) => {
     const response = await axiosInstance.delete(`/user_profiles/${id}`);
     return response;
 };
+
+// Eigen profiel ophalen
+export const getMyUserProfile = async () => {
+    const response = await axiosInstance.get("/user_profiles/me");
+    return response;
+};
+
+// Eigen profiel aanpassen
+export const updateMyUserProfile = async (userProfile) => {
+    const response = await axiosInstance.put("/user_profiles/me", userProfile);
+    return response;
+};
+

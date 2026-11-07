@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "./Contact.css";
+import "./Contact.css"
 import TextArea from "../../components/textarea/TextArea.jsx";
 
 function Contact() {
@@ -21,7 +21,7 @@ function Contact() {
         e.preventDefault();
 
         console.log(formData);
-        // Send formData to your backend here
+
         const receiver = "jvsignacia@live.nl";
 
         const subject = encodeURIComponent(formData.description);
@@ -44,7 +44,7 @@ function Contact() {
                 <p>Heb je een vraag over een recept? Stuur ons een bericht!</p>
 
                 <form className="form-narrow" onSubmit={handleSubmit}>
-                    <label htmlFor="name">Naam</label>
+                    <label htmlFor="name">Name*</label>
                     <input
                         className="field"
                         id="name"
@@ -56,6 +56,7 @@ function Contact() {
                         required
                     />
 
+                    <label htmlFor="email">Email*</label>
                     <input
                         className="field"
                         id="email"
@@ -67,6 +68,7 @@ function Contact() {
                         required
                     />
 
+                    <label htmlFor="description">Description* </label>
                     <input
                         className="field"
                         id="description"
@@ -75,8 +77,10 @@ function Contact() {
                         placeholder="Description"
                         value={formData.description}
                         onChange={handleChange}
+                        required
                     />
                     <TextArea
+                        label="Message*"
                         className="field"
                         id="message"
                         name="message"
@@ -86,9 +90,8 @@ function Contact() {
                         required
                     />
 
-                    <div>
-                        <button type="submit">Send</button>
-                    </div>
+                        <button type="submit" className="green-filled">Send</button>
+
                 </form>
             </div>
         </section>

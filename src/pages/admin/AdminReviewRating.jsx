@@ -1,13 +1,7 @@
 import { useState, useEffect } from "react";
-
-import {
-    getAllReviewRatings,
-    createReviewRating,
-    updateReviewRating,
-    deleteReviewRating,
-} from "../../api/reviewRatingService.js";
-
+import { getAllReviewRatings, createReviewRating, updateReviewRating, deleteReviewRating } from "../../api/reviewRatingService.js";
 import { getAllRecipes } from "../../api/recipeService.js";
+
 
 const emptyForm = {
     comment: "",

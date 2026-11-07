@@ -1,8 +1,11 @@
 import './SignIn.css'
 import logo from "../../assets/receta-logo.svg"
 import signInImg from "../../assets/signin-img.jpg"
+import MessageLabel from "../messagelabel/MessageLabel.jsx";
+import {useNavigate} from "react-router-dom";
 
 function SignIn() {
+    const navigate = useNavigate();
     return (
         <section className=" outer-container sign-in">
             <div className="inner-container">
@@ -42,6 +45,7 @@ function SignIn() {
                                 <button
                                     type="submit"
                                     className="green-filled btn"
+                                    onClick={() => navigate("/")}
                                 >
                                     Sign In
                                 </button>
@@ -51,10 +55,11 @@ function SignIn() {
                                 Don't have an account?
                             </p>
 
-                            <a href="/signup" className="green-outline btn__link">
+                            <a href="/sign_up" className="green-outline btn__link">
                                 Sign Up
                             </a>
                         </div>
+                        <p><MessageLabel variant="error">Klik op sign in keyclock om in te loggen. Deze pagina is nog inactief.</MessageLabel></p>
                     </div>
                     </section>
 
@@ -67,7 +72,6 @@ function SignIn() {
                         />
                     </div>
                     </section>
-
 
             </div>
         </section>

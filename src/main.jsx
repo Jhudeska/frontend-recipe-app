@@ -3,27 +3,37 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App.jsx'
 import {BrowserRouter} from "react-router-dom";
-import keycloak from "./helpers/keycloak.js";
-import {AppProvider} from "./context/AppContext.jsx";
+import { initKeycloak } from './helpers/keycloak.js';
+import {AppProvider} from "./context/AppStatusContext.jsx";
+import {AuthProvider} from "./context/AuthContext.jsx";
+import {FavoriteProvider} from "./context/FavoriteContext.jsx";
 
-keycloak.init({
-    onLoad: "login-required",
-    pkceMethod: "S256",
-    flow: "standard",
-}).then((authenticated) => {
-    if (authenticated) {
+async function startApp() {
+
+    try {
+
+        await initKeycloak();
+
         createRoot(
             document.getElementById("root")
         ).render(
-            <StrictMode>
+            // <StrictMode>
                 <BrowserRouter>
-                        <AppProvider>
-                            <App />
-                        </AppProvider>
+                    <AppProvider>
+                        <AuthProvider>
+                                <FavoriteProvider>
+                                <App />
+                                </FavoriteProvider>
+                        </AuthProvider>
+                    </AppProvider>
                 </BrowserRouter>
-            </StrictMode>
+            // </StrictMode>
         );
+
+    } catch (error) {
+
+        console.error("Application startup failed:", error);
     }
-}).catch((error) => {
-    console.error("Keycloak login mislukt:", error);
-});
+}
+
+startApp();

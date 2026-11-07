@@ -26,3 +26,9 @@ dist-ssr
 *.sln
 *.sw?
 /src/pages/test/
+/src/test/
+
+
+.env
+.env.local
+.env.*.local
